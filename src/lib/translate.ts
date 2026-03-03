@@ -49,10 +49,12 @@ export async function generateNewspaper(
 ## 今日の情報
 - 日付: ${dateStr}（${dayOfWeek}）
 - 号数: No. ${String(issueNumber).padStart(3, "0")}
-- 為替: TWD/JPY ${marketData.twdJpy.value}
-- TAIEX: ${marketData.taiex.value}
+- 為替: TWD/JPY ${marketData.twdJpy.value}円 ${marketData.twdJpy.delta || ""}
+- TAIEX: ${marketData.taiex.value} ${marketData.taiex.delta || ""}
 - 台北天気: ${weather.taipei.condition} ${weather.taipei.temp}°C
 - 高雄天気: ${weather.kaohsiung.condition} ${weather.kaohsiung.temp}°C
+
+※重要: ヘッダーやマーケットセクションの数値はAPIから取得済みなので、記事本文中で株価・為替を言及する場合も上記の数字をそのまま使ってください（「万」表記や独自の丸め処理は禁止。例: ○ 23,605 × 2万3509）
 
 ## RSS記事一覧
 ${articleList}
@@ -169,16 +171,16 @@ ${articleList}
     "pronunciation": "カタカナ読み",
     "meaning": "ビジネスで使える場面の説明"
   },
-  "imagePrompt": "Hero image prompt in English. Photojournalistic, editorial style, cinematic lighting, no text overlay. Describe the scene based on the hero article content."
+  "imagePrompt": "Hero image prompt in English. Bright, well-lit, high contrast, vivid colors, photojournalistic editorial style, no text overlay. Describe a specific, concrete scene based on the hero article (e.g., airport terminal, city street, business meeting). Avoid abstract or dark imagery."
 }
 
 ## 必須ルール
-- headlinesは5本（hero記事と重複しないこと）
-- business.metricsは3本、business.articlesは2本
-- japanEntry.metricsは3本、japanEntry.cardsは2〜4本（successとstruggleを混ぜる）
-- japanEntry.articlesは1〜2本
+- headlinesは4本（hero記事と重複しないこと）
+- business.metricsは3本、business.articlesは1本
+- japanEntry.metricsは3本、japanEntry.cardsは2本（successとstruggleを1つずつ）
+- japanEntry.articlesは1本
 - culture.featuredは2本、culture.articlesは1本
-- lifeInTaiwan.articlesは2本
+- lifeInTaiwan.articlesは1本
 - RSS記事にない情報は使わない（japanEntryのcardsとcaseStudyは既知の一般的事実でOK）
 - 全sourceにnameとurlを含める（urlがない場合は空文字）
 - imagePromptは英語40語以内`;

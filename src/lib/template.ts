@@ -8,7 +8,7 @@ import type {
   SourceLink,
 } from "./types";
 
-// ===== CSS (extracted from taiwan-news-final.html) =====
+// ===== CSS (extracted from taiwan-news-final.html, with spacing improvements) =====
 
 const CSS = `
 :root {
@@ -48,7 +48,7 @@ body {
 .d-delta.dn { color: var(--accent); }
 .d-delta.flat { color: var(--gray-light); }
 .content { padding: 0 28px; }
-.sec { display: flex; align-items: center; gap: 10px; margin: 32px 0 18px; }
+.sec { display: flex; align-items: center; gap: 10px; margin: 48px 0 20px; }
 .sec .sec-en { font-family: var(--mono); font-size: 0.58rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
 .sec .sec-jp { font-size: 0.82rem; font-weight: 700; }
 .sec::after { content: ''; flex: 1; height: 1px; background: var(--line); }
@@ -62,7 +62,10 @@ body {
 .hero h1 { font-size: 1.55rem; font-weight: 900; line-height: 1.5; margin-top: 6px; letter-spacing: 0.01em; }
 .hero .lead { font-size: 0.9rem; line-height: 1.9; color: #333; margin-top: 12px; }
 .hero .meta { font-family: var(--en); font-size: 0.68rem; color: var(--gray-light); margin-top: 10px; }
-.rule { border: none; border-top: 1px solid var(--line); margin: 24px 0; }
+.source-ref { display: block; font-size: 0.72rem; color: var(--gray); margin-top: 8px; }
+.source-ref a { color: var(--gray); text-decoration: none; transition: color 0.2s; }
+.source-ref a:hover { color: var(--accent); }
+.rule { border: none; border-top: 1px solid var(--line); margin: 32px 0; }
 .headlines .hl { padding: 14px 0; border-bottom: 1px solid var(--line); display: flex; gap: 14px; }
 .hl .n { font-family: var(--mono); font-size: 0.7rem; font-weight: 800; color: var(--line-dark); margin-top: 3px; flex-shrink: 0; width: 22px; }
 .hl .hl-tag { font-family: var(--mono); font-size: 0.5rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); opacity: 0.7; }
@@ -75,22 +78,23 @@ body {
 .hl-col .hl-tag { font-family: var(--mono); font-size: 0.5rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); opacity: 0.7; }
 .hl-col h3 { font-size: 0.88rem; font-weight: 700; line-height: 1.5; margin-top: 3px; }
 .hl-col p { font-size: 0.76rem; line-height: 1.7; color: #666; margin-top: 4px; }
-.col-box { margin: 24px 0; padding: 18px 20px; background: var(--bg); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; }
+.col-box { margin: 28px 0; padding: 20px 22px; background: var(--bg); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; }
 .col-box .col-label { font-family: var(--mono); font-size: 0.55rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
 .col-box h4 { font-size: 0.9rem; font-weight: 700; margin-top: 4px; line-height: 1.5; }
 .col-box p { font-size: 0.8rem; line-height: 1.75; color: #555; margin-top: 6px; }
 .num-highlight { display: flex; margin: 20px 0; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
-.num-card { flex: 1; padding: 16px; text-align: center; border-right: 1px solid var(--line); }
+.num-card { flex: 1; padding: 18px 16px; text-align: center; border-right: 1px solid var(--line); }
 .num-card:last-child { border-right: none; }
-.num-card .nc-val { font-family: var(--mono); font-size: 1.6rem; font-weight: 900; color: var(--black); line-height: 1; }
-.num-card .nc-unit { font-size: 0.65rem; color: var(--gray); margin-top: 4px; line-height: 1.3; }
-.we-comm { margin: 32px -28px 0; padding: 28px 28px; background: var(--bg); border-top: 1px solid var(--line); }
-.we-comm .we-tag { font-family: var(--mono); font-size: 0.58rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray); opacity: 0.7; }
-.we-comm h3 { font-size: 1rem; font-weight: 700; line-height: 1.55; margin-top: 6px; }
-.we-comm p { font-size: 0.8rem; line-height: 1.8; color: #555; margin-top: 8px; }
-.we-comm .cta { display: inline-flex; align-items: center; gap: 5px; margin-top: 14px; font-family: var(--mono); font-size: 0.68rem; font-weight: 700; color: var(--accent); text-decoration: none; }
-.we-comm .cta:hover { opacity: 0.7; }
-.we-comm .cta::after { content: ' →'; }
+.num-card .nc-val { font-family: var(--mono); font-size: 1.5rem; font-weight: 900; color: var(--black); line-height: 1; }
+.num-card .nc-unit { font-size: 0.7rem; color: #555; margin-top: 6px; line-height: 1.4; font-weight: 500; }
+.we-comm { margin: 48px -28px 0; padding: 28px 28px; background: var(--bg); border-top: 1px solid var(--line); }
+.we-comm-inline { margin: 32px 0; padding: 22px 24px; background: var(--bg); border-radius: 6px; border: 1px solid var(--line); }
+.we-comm .we-tag, .we-comm-inline .we-tag { font-family: var(--mono); font-size: 0.58rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray); opacity: 0.7; }
+.we-comm h3, .we-comm-inline h3 { font-size: 1rem; font-weight: 700; line-height: 1.55; margin-top: 6px; }
+.we-comm p, .we-comm-inline p { font-size: 0.8rem; line-height: 1.8; color: #555; margin-top: 8px; }
+.we-comm .cta, .we-comm-inline .cta { display: inline-flex; align-items: center; gap: 5px; margin-top: 14px; font-family: var(--mono); font-size: 0.68rem; font-weight: 700; color: var(--accent); text-decoration: none; }
+.we-comm .cta:hover, .we-comm-inline .cta:hover { opacity: 0.7; }
+.we-comm .cta::after, .we-comm-inline .cta::after { content: ' →'; }
 .footer { padding: 24px 28px; border-top: 1px solid var(--line); text-align: center; }
 .footer .f-brand { font-family: var(--mono); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; color: var(--gray); }
 .footer .f-brand span { color: var(--accent); }
@@ -103,11 +107,11 @@ body {
 .source-link:hover { color: var(--accent); }
 .source-link::before { content: '📎 '; font-size: 0.55rem; }
 .hl .source-link { margin-top: 2px; }
-.case-study { margin: 24px 0; padding: 20px; background: #fff8f6; border: 1px solid #ffe0d6; border-left: 4px solid var(--accent); border-radius: 0 6px 6px 0; }
+.case-study { margin: 28px 0; padding: 20px; background: #fff8f6; border: 1px solid #ffe0d6; border-left: 4px solid var(--accent); border-radius: 0 6px 6px 0; }
 .case-study .cs-label { font-family: var(--mono); font-size: 0.55rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
 .case-study h4 { font-size: 0.9rem; font-weight: 700; margin-top: 4px; line-height: 1.5; }
 .case-study p { font-size: 0.8rem; line-height: 1.75; color: #555; margin-top: 6px; }
-.case-study .cs-source { font-family: var(--en); font-size: 0.6rem; color: var(--gray); margin-top: 8px; }
+.case-study .cs-source { font-size: 0.72rem; color: var(--gray); margin-top: 8px; }
 .case-study .cs-source a { color: var(--gray); text-decoration: none; }
 .case-study .cs-source a:hover { color: var(--accent); }
 .entry-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
@@ -134,11 +138,11 @@ body {
   .num-highlight { flex-direction: column; }
   .num-card { border-right: none; border-bottom: 1px solid var(--line); }
   .num-card:last-child { border-bottom: none; }
-  .we-comm { margin: 32px -20px 0; padding: 24px 20px; }
+  .we-comm { margin: 48px -20px 0; padding: 24px 20px; }
   .entry-cards { grid-template-columns: 1fr; }
 }
 @keyframes fi { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-.hero, .sec, .headlines, .hl-grid, .col-box, .num-highlight, .we-comm, .case-study, .entry-cards { animation: fi 0.5s ease both; }
+.hero, .sec, .headlines, .hl-grid, .col-box, .num-highlight, .we-comm, .we-comm-inline, .case-study, .entry-cards { animation: fi 0.5s ease both; }
 .hero { animation-delay: 0.05s; }
 `;
 
@@ -153,6 +157,14 @@ function esc(str: string): string {
 }
 
 // ===== Render Functions =====
+
+function renderSourceRef(source?: SourceLink): string {
+  if (!source || !source.name) return "";
+  if (source.url) {
+    return `<span class="source-ref">出典: <a href="${esc(source.url)}" target="_blank" rel="noopener">${esc(source.name)}</a></span>`;
+  }
+  return `<span class="source-ref">出典: ${esc(source.name)}</span>`;
+}
 
 function renderSourceLink(source?: SourceLink): string {
   if (!source || !source.url) return "";
@@ -174,7 +186,7 @@ function renderHlCol(article: HeadlineArticle): string {
       <span class="hl-tag">${esc(article.category)}</span>
       <h3>${esc(article.headline)}</h3>
       ${article.excerpt ? `<p>${esc(article.excerpt)}</p>` : ""}
-      ${renderSourceLink(article.source)}
+      ${renderSourceRef(article.source)}
     </div>`;
 }
 
@@ -187,7 +199,7 @@ function renderHeadline(article: HeadlineArticle, index: number): string {
         <span class="hl-tag">${esc(article.category)}</span>
         <h3>${esc(article.headline)}</h3>
         ${article.excerpt ? `<p class="hl-excerpt">${esc(article.excerpt)}</p>` : ""}
-        ${renderSourceLink(article.source)}
+        ${renderSourceRef(article.source)}
       </div>
     </div>`;
 }
@@ -198,7 +210,7 @@ function renderColumnBox(box: ColumnBox): string {
       <div class="col-label">${esc(box.label)}</div>
       <h4>${esc(box.title)}</h4>
       <p>${esc(box.body)}</p>
-      ${renderSourceLink(box.source)}
+      ${renderSourceRef(box.source)}
     </div>`;
 }
 
@@ -224,7 +236,7 @@ function renderEntryCards(cards: EntryCard[]): string {
         <div class="ec-brand">${esc(c.brand)}</div>
         <div class="ec-detail">${esc(c.detail)}</div>
         <div class="ec-num">${esc(c.number)}<span class="ec-num-label"> ${esc(c.numberLabel)}</span></div>
-        ${renderSourceLink(c.source)}
+        ${renderSourceRef(c.source)}
       </div>`
     )
     .join("");
@@ -245,6 +257,16 @@ function renderSection(en: string, jp: string): string {
   return `<div class="sec"><span class="sec-en">${esc(en)}</span><span class="sec-jp">${esc(jp)}</span></div>`;
 }
 
+function renderWeCtaInline(): string {
+  return `
+<div class="we-comm-inline">
+  <div class="we-tag">PR</div>
+  <h3>台湾進出・越境ビジネスのご相談</h3>
+  <p>市場調査からブランド設計、クリエイティブ制作まで一貫して伴走します。</p>
+  <a href="https://wewewetw.jp/" class="cta">想像以上有限公司（We TAIWAN）</a>
+</div>`;
+}
+
 // ===== Main Template Generator =====
 
 export function generateNewsHTML(data: TaiwanNewsData): string {
@@ -252,9 +274,19 @@ export function generateNewsHTML(data: TaiwanNewsData): string {
     ? `<img src="${esc(data.heroImageUrl)}" alt="${esc(data.hero.headline)}">`
     : `<div class="hero-fallback"><span>台灣</span></div>`;
 
-  // Headlines: first 2 go into grid, rest into list
-  const gridArticles = data.headlines.slice(0, 2);
-  const listArticles = data.headlines.slice(2);
+  // OGP image: use hero image if available
+  const ogImage = data.heroImageUrl || "";
+
+  // Headlines: limit to 4 total. First 2 → grid, rest → list
+  const allHeadlines = data.headlines.slice(0, 4);
+  const gridArticles = allHeadlines.slice(0, 2);
+  const listArticles = allHeadlines.slice(2);
+
+  // Limit columns and case studies to 1
+  const businessArticle = data.business.articles.slice(0, 1);
+  const cultureArticles = data.culture.articles.slice(0, 1);
+  const lifeArticles = data.lifeInTaiwan.articles.slice(0, 1);
+  const japanEntryArticles = data.japanEntry.articles.slice(0, 1);
 
   return `<!DOCTYPE html>
 <html lang="ja">
@@ -262,12 +294,13 @@ export function generateNewsHTML(data: TaiwanNewsData): string {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>台灣生成新聞 ${data.issueNumber} — ${data.date}</title>
-<meta name="description" content="台湾現地メディアの報道をAIが日本語で要約。${data.date}の台湾ニュース。">
+<meta name="description" content="${esc(data.hero.headline)} — 台湾現地メディアの報道をAIが日本語で要約。">
 <meta property="og:title" content="台灣生成新聞 ${data.issueNumber}">
 <meta property="og:description" content="${esc(data.hero.headline)}">
 <meta property="og:type" content="article">
-${data.heroImageUrl ? `<meta property="og:image" content="${esc(data.heroImageUrl)}">` : ""}
+${ogImage ? `<meta property="og:image" content="${esc(ogImage)}">` : ""}
 <meta name="twitter:card" content="summary_large_image">
+${ogImage ? `<meta name="twitter:image" content="${esc(ogImage)}">` : ""}
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -308,7 +341,7 @@ ${data.heroImageUrl ? `<meta property="og:image" content="${esc(data.heroImageUr
   <h1>${esc(data.hero.headline)}</h1>
   <p class="lead">${esc(data.hero.lead)}</p>
   <p class="meta">各報道を参考にAIが要約</p>
-  ${renderSourceLink(data.hero.source)}
+  ${renderSourceRef(data.hero.source)}
 </article>
 
 <hr class="rule">
@@ -319,9 +352,9 @@ ${renderSection("Headlines", "本日の注目")}
   ${gridArticles.map((a) => renderHlCol(a)).join("")}
 </div>
 
-<div class="headlines">
+${listArticles.length > 0 ? `<div class="headlines">
   ${listArticles.map((a, i) => renderHeadline(a, i + 3)).join("")}
-</div>
+</div>` : ""}
 
 ${renderColumnBox(data.trivia)}
 
@@ -329,11 +362,13 @@ ${renderSection("Business", "台湾ビジネス")}
 
 ${renderNumHighlight(data.business.metrics)}
 
-<div class="headlines">
-  ${data.business.articles.map((a, i) => renderHeadline(a, i + 1)).join("")}
-</div>
+${businessArticle.length > 0 ? `<div class="headlines">
+  ${businessArticle.map((a, i) => renderHeadline(a, i + 1)).join("")}
+</div>` : ""}
 
 ${renderColumnBox(data.business.bizWord)}
+
+${renderWeCtaInline()}
 
 ${renderSection("Japan Entry", "日本企業の台湾進出")}
 
@@ -341,31 +376,29 @@ ${renderNumHighlight(data.japanEntry.metrics)}
 
 ${renderEntryCards(data.japanEntry.cards)}
 
-<div class="headlines">
-  ${data.japanEntry.articles.map((a, i) => renderHeadline(a, i + 1)).join("")}
-</div>
+${japanEntryArticles.length > 0 ? `<div class="headlines">
+  ${japanEntryArticles.map((a, i) => renderHeadline(a, i + 1)).join("")}
+</div>` : ""}
 
 ${renderCaseStudy(data.japanEntry.caseStudy)}
-
-${renderColumnBox(data.japanEntry.trendWatch)}
 
 ${renderSection("Culture", "台湾カルチャー")}
 
 <div class="hl-grid">
-  ${data.culture.featured.map((a) => renderHlCol(a)).join("")}
+  ${data.culture.featured.slice(0, 2).map((a) => renderHlCol(a)).join("")}
 </div>
 
-<div class="headlines">
-  ${data.culture.articles.map((a, i) => renderHeadline(a, i + 1)).join("")}
-</div>
+${cultureArticles.length > 0 ? `<div class="headlines">
+  ${cultureArticles.map((a, i) => renderHeadline(a, i + 1)).join("")}
+</div>` : ""}
 
 <hr class="rule">
 
 ${renderSection("Life in Taiwan", "台湾で暮らす")}
 
-<div class="headlines">
-  ${data.lifeInTaiwan.articles.map((a, i) => renderHeadline(a, i + 1)).join("")}
-</div>
+${lifeArticles.length > 0 ? `<div class="headlines">
+  ${lifeArticles.map((a, i) => renderHeadline(a, i + 1)).join("")}
+</div>` : ""}
 
 ${renderColumnBox(data.lifeInTaiwan.lifeTip)}
 
