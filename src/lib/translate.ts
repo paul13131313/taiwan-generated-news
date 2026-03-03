@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { RSSArticle, MarketData, WeatherData, TaiwanNewsData } from "./types";
+import { pickStockArticles } from "./stock-articles";
 
 function createClient() {
   const key = process.env.ANTHROPIC_API_KEY;
@@ -217,6 +218,15 @@ ${articleList}
   const text =
     response.content[0].type === "text" ? response.content[0].text : "";
   const parsed = parseGeneratedJson(text);
+
+  // japanEntry: cardsが空の場合はストック記事で埋める
+  let isStock = false;
+  if (!parsed.japanEntry.cards || parsed.japanEntry.cards.length === 0) {
+    console.log("[translate] japanEntry cards empty — using stock articles");
+    parsed.japanEntry.cards = pickStockArticles(2);
+    isStock = true;
+  }
+  parsed.japanEntry.isStock = isStock;
 
   // Merge with date/issue/market/weather info
   return {

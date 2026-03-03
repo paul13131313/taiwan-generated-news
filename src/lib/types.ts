@@ -93,6 +93,7 @@ export interface TaiwanNewsData {
     articles: HeadlineArticle[];
     caseStudy: CaseStudyBox;
     trendWatch: ColumnBox;
+    isStock?: boolean; // ストック記事（過去事例）を使用中かどうか
   };
   culture: {
     featured: HeadlineArticle[];

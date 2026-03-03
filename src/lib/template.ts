@@ -233,9 +233,10 @@ function renderEntryCards(cards: EntryCard[]): string {
       (c) => `
       <div class="entry-card">
         <span class="ec-badge ${c.type}">${c.type === "success" ? "Success" : "Struggle"}</span>
-        <div class="ec-brand">${esc(c.brand)}</div>
+        <div style="font-family: var(--mono); font-size: 2.5rem; font-weight: 900; color: var(--accent); line-height: 1.1; margin-top: 10px;">${esc(c.number)}</div>
+        <div style="font-size: 0.72rem; color: var(--gray); margin-top: 2px;">${esc(c.numberLabel)}</div>
+        <div class="ec-brand" style="margin-top: 10px;">${esc(c.brand)}</div>
         <div class="ec-detail">${esc(c.detail)}</div>
-        <div class="ec-num">${esc(c.number)}<span class="ec-num-label"> ${esc(c.numberLabel)}</span></div>
         ${renderSourceRef(c.source)}
       </div>`
     )
@@ -367,6 +368,16 @@ ${businessArticle.length > 0 ? `<div class="headlines">
 ${renderColumnBox(data.business.bizWord)}
 
 ${renderSection("Japan Entry", "日本企業の台湾進出")}
+
+${data.japanEntry.isStock
+  ? `<div style="display: inline-flex; align-items: center; gap: 6px; margin-bottom: 14px; padding: 4px 12px; background: var(--bg); border-radius: 4px; border: 1px solid var(--line);">
+      <span style="font-family: var(--mono); font-size: 0.55rem; font-weight: 800; letter-spacing: 0.1em; color: var(--gray);">PICK UP</span>
+      <span style="font-size: 0.75rem; color: #555;">過去の注目事例</span>
+    </div>`
+  : `<div style="display: inline-flex; align-items: center; gap: 6px; margin-bottom: 14px; padding: 4px 12px; background: #fff8f6; border-radius: 4px; border: 1px solid #ffe0d6;">
+      <span style="font-family: var(--mono); font-size: 0.55rem; font-weight: 800; letter-spacing: 0.1em; color: var(--accent);">TODAY</span>
+      <span style="font-size: 0.75rem; color: #555;">最新ニュース</span>
+    </div>`}
 
 ${data.japanEntry.cards && data.japanEntry.cards.length > 0
   ? renderEntryCards(data.japanEntry.cards)
