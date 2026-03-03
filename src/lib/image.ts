@@ -2,8 +2,6 @@ import { put } from "@vercel/blob";
 
 const BRIGHTNESS_THRESHOLD = 50;
 const MAX_RETRIES = 3;
-const POLL_INTERVAL = 2000; // 2 seconds
-const POLL_TIMEOUT = 60000; // 60 seconds max
 
 /**
  * Rough brightness check by sampling raw bytes.
@@ -22,82 +20,84 @@ function checkImageBrightness(imageBuffer: ArrayBuffer): number {
 }
 
 /**
- * Call Replicate API via fetch (no SDK dependency).
- * Creates a prediction, polls until complete, returns output URL.
+ * Call Together AI API to generate image with FLUX.1-schnell.
+ * Returns base64-encoded image data.
  */
-async function callReplicateFlux(prompt: string): Promise<string> {
-  const token = process.env.REPLICATE_API_TOKEN;
-  if (!token) throw new Error("REPLICATE_API_TOKEN is not set");
+async function callTogetherFlux(prompt: string): Promise<Buffer> {
+  const token = process.env.TOGETHER_API_KEY;
+  if (!token) throw new Error("TOGETHER_API_KEY is not set");
 
-  console.log(`[image] Replicate token exists: ${token.slice(0, 8)}...`);
+  console.log(`[image] Together AI token exists: ${token.slice(0, 8)}...`);
   console.log(`[image] Prompt: ${prompt.slice(0, 100)}...`);
 
-  // Step 1: Create prediction
-  const createRes = await fetch(
-    "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions",
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        Prefer: "wait",
-      },
-      body: JSON.stringify({
-        input: {
-          prompt,
-          num_outputs: 1,
-          aspect_ratio: "16:9",
-          output_format: "webp",
-          output_quality: 80,
-        },
-      }),
-    }
-  );
+  const response = await fetch("https://api.together.xyz/v1/images/generations", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "black-forest-labs/FLUX.1-schnell-Free",
+      prompt,
+      width: 1344,
+      height: 768,
+      n: 1,
+      response_format: "b64_json",
+    }),
+  });
 
-  if (!createRes.ok) {
-    const errorBody = await createRes.text();
-    throw new Error(`Replicate create failed (${createRes.status}): ${errorBody}`);
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`Together AI failed (${response.status}): ${errorBody}`);
   }
 
-  let prediction = await createRes.json();
-  console.log(`[image] Prediction created: id=${prediction.id}, status=${prediction.status}`);
-
-  // Step 2: Poll if not already completed (Prefer: wait should handle most cases)
-  if (prediction.status !== "succeeded" && prediction.status !== "failed") {
-    const startTime = Date.now();
-    while (Date.now() - startTime < POLL_TIMEOUT) {
-      await new Promise((r) => setTimeout(r, POLL_INTERVAL));
-
-      const pollRes = await fetch(
-        `https://api.replicate.com/v1/predictions/${prediction.id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (!pollRes.ok) {
-        throw new Error(`Replicate poll failed (${pollRes.status})`);
-      }
-
-      prediction = await pollRes.json();
-      console.log(`[image] Poll: status=${prediction.status}`);
-
-      if (prediction.status === "succeeded" || prediction.status === "failed") {
-        break;
-      }
-    }
+  const result = await response.json();
+  const b64 = result.data?.[0]?.b64_json;
+  if (!b64) {
+    throw new Error("Together AI returned no image data");
   }
 
-  if (prediction.status !== "succeeded") {
-    throw new Error(`Replicate prediction failed: ${prediction.status} — ${prediction.error || "unknown"}`);
-  }
-
-  const output = prediction.output;
-  if (!output || !Array.isArray(output) || output.length === 0) {
-    throw new Error("Replicate returned no output images");
-  }
-
-  console.log(`[image] Got image URL: ${output[0].slice(0, 80)}...`);
-  return output[0];
+  console.log(`[image] Got base64 image (${b64.length} chars)`);
+  return Buffer.from(b64, "base64");
 }
+
+// --- Replicate API (コメントアウト: 決済不通のため Together AI に切り替え) ---
+// async function callReplicateFlux(prompt: string): Promise<string> {
+//   const token = process.env.REPLICATE_API_TOKEN;
+//   if (!token) throw new Error("REPLICATE_API_TOKEN is not set");
+//   const createRes = await fetch(
+//     "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions",
+//     {
+//       method: "POST",
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         "Content-Type": "application/json",
+//         Prefer: "wait",
+//       },
+//       body: JSON.stringify({
+//         input: { prompt, num_outputs: 1, aspect_ratio: "16:9", output_format: "webp", output_quality: 80 },
+//       }),
+//     }
+//   );
+//   if (!createRes.ok) throw new Error(`Replicate create failed (${createRes.status})`);
+//   let prediction = await createRes.json();
+//   if (prediction.status !== "succeeded" && prediction.status !== "failed") {
+//     const startTime = Date.now();
+//     while (Date.now() - startTime < POLL_TIMEOUT) {
+//       await new Promise((r) => setTimeout(r, POLL_INTERVAL));
+//       const pollRes = await fetch(`https://api.replicate.com/v1/predictions/${prediction.id}`, {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+//       if (!pollRes.ok) throw new Error(`Replicate poll failed (${pollRes.status})`);
+//       prediction = await pollRes.json();
+//       if (prediction.status === "succeeded" || prediction.status === "failed") break;
+//     }
+//   }
+//   if (prediction.status !== "succeeded") throw new Error(`Replicate failed: ${prediction.status}`);
+//   const output = prediction.output;
+//   if (!output || !Array.isArray(output) || output.length === 0) throw new Error("No output");
+//   return output[0];
+// }
 
 export async function generateHeroImage(prompt: string): Promise<string | null> {
   const stylePrefix =
@@ -110,18 +110,13 @@ export async function generateHeroImage(prompt: string): Promise<string | null> 
       const fullPrompt = `${stylePrefix}${prompt}. --no ${negativePrompt}`;
       console.log(`[image] Attempt ${attempt}/${MAX_RETRIES}`);
 
-      // Call Replicate API
-      const imageUrl = await callReplicateFlux(fullPrompt);
-
-      // Download image
-      console.log(`[image] Downloading image...`);
-      const imageRes = await fetch(imageUrl);
-      if (!imageRes.ok) throw new Error(`Image download failed: ${imageRes.status}`);
-      const imageBuffer = await imageRes.arrayBuffer();
-      console.log(`[image] Downloaded: ${imageBuffer.byteLength} bytes`);
+      // Call Together AI API (base64レスポンス)
+      const imageBuffer = await callTogetherFlux(fullPrompt);
+      const uint8 = new Uint8Array(imageBuffer);
+      console.log(`[image] Generated: ${uint8.byteLength} bytes`);
 
       // Check brightness
-      const brightness = checkImageBrightness(imageBuffer);
+      const brightness = checkImageBrightness(uint8.buffer as ArrayBuffer);
       console.log(`[image] Brightness: ${brightness.toFixed(1)}`);
 
       if (brightness < BRIGHTNESS_THRESHOLD && attempt < MAX_RETRIES) {
@@ -133,9 +128,9 @@ export async function generateHeroImage(prompt: string): Promise<string | null> 
       const dateStr = new Date().toISOString().split("T")[0];
       console.log(`[image] Uploading to Vercel Blob...`);
       const blob = await put(
-        `hero-${dateStr}-${attempt}.webp`,
-        new Blob([imageBuffer], { type: "image/webp" }),
-        { access: "public", contentType: "image/webp" }
+        `hero-${dateStr}-${attempt}.png`,
+        new Blob([uint8], { type: "image/png" }),
+        { access: "public", contentType: "image/png" }
       );
 
       console.log(`[image] Upload complete: ${blob.url}`);
