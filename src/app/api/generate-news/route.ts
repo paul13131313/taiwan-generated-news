@@ -6,6 +6,7 @@ import { generateHeroImage } from "@/lib/image";
 import { generateNewsHTML } from "@/lib/template";
 import { storeIssue, incrementIssueCounter, issueExists } from "@/lib/redis";
 
+export const dynamic = "force-dynamic";
 export const maxDuration = 120;
 
 export async function POST(request: Request) {
