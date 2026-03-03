@@ -183,7 +183,16 @@ ${articleList}
 - lifeInTaiwan.articlesは1本
 - RSS記事にない情報は使わない（japanEntryのcardsとcaseStudyは既知の一般的事実でOK）
 - 全sourceにnameとurlを含める（urlがない場合は空文字）
-- imagePromptは英語40語以内`;
+- imagePromptは英語40語以内
+
+## japanEntry（日本企業の台湾進出）セクションの厳密ルール
+以下のニュース記事から、日本企業が台湾に進出・出店・工場設立・提携した事例のみを抽出してください。
+条件:
+- 必ず日本企業が主語であること
+- 台湾（台北、高雄、台中等）が進出先であること
+- スポーツ、エンタメ、個人の活動は除外
+- 米国、中国、その他の国への進出は除外
+- 該当する記事がない場合はcardsのdetailに「本日の該当ニュースはありません」と記載し、既知の一般的な台湾進出事例を使用すること`;
 
   const response = await client.messages.create({
     model: "claude-haiku-4-5-20251001",

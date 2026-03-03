@@ -360,19 +360,13 @@ ${renderColumnBox(data.trivia)}
 
 ${renderSection("Business", "台湾ビジネス")}
 
-${renderNumHighlight(data.business.metrics)}
-
 ${businessArticle.length > 0 ? `<div class="headlines">
   ${businessArticle.map((a, i) => renderHeadline(a, i + 1)).join("")}
 </div>` : ""}
 
 ${renderColumnBox(data.business.bizWord)}
 
-${renderWeCtaInline()}
-
 ${renderSection("Japan Entry", "日本企業の台湾進出")}
-
-${renderNumHighlight(data.japanEntry.metrics)}
 
 ${renderEntryCards(data.japanEntry.cards)}
 
