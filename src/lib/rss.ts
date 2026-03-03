@@ -5,7 +5,7 @@ const parser = new Parser({
   timeout: 15000,
   headers: {
     "User-Agent":
-      "Mozilla/5.0 (compatible; TaiwanGeneratedNews/1.0; +https://github.com/paul13131313/taiwan-generated-news)",
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     Accept: "application/rss+xml, application/xml, text/xml, */*",
   },
 });
@@ -19,71 +19,56 @@ interface FeedSource {
 }
 
 const TAIWAN_FEEDS: FeedSource[] = [
-  // 中央社（個別フィード）
+  // === 中央通訊社（FeedBurner経由） ===
   {
-    name: "中央社（経済）",
-    url: "https://www.cna.com.tw/rss/afe.xml",
-    category: "経済",
-    lang: "zh",
-  },
-  {
-    name: "中央社（両岸）",
-    url: "https://www.cna.com.tw/rss/acn.xml",
+    name: "中央通訊社（政治）",
+    url: "https://feeds.feedburner.com/rsscna/politics",
     category: "政治",
     lang: "zh",
   },
-  // フォーカス台湾（日本語）
   {
-    name: "フォーカス台湾",
-    url: "https://japan.focustaiwan.tw/rss",
-    category: "総合",
-    lang: "ja",
-  },
-  // 日本メディア
-  {
-    name: "NHK",
-    url: "https://www.nhk.or.jp/rss/news/cat0.xml",
+    name: "中央通訊社（国際）",
+    url: "https://feeds.feedburner.com/rsscna/intworld",
     category: "国際",
-    lang: "ja",
-  },
-  {
-    name: "日経アジア",
-    url: "https://asia.nikkei.com/rss",
-    category: "経済",
-    lang: "en",
-    filter: (title) => /taiwan|taipei|tsmc|foxconn/i.test(title),
-  },
-  {
-    name: "JETRO",
-    url: "https://www.jetro.go.jp/biznews/rss/asia.xml",
-    category: "ビジネス",
-    lang: "ja",
-    filter: (title) => /台湾|Taiwan/i.test(title),
-  },
-  // 台湾メディア
-  {
-    name: "自由時報（経済）",
-    url: "https://news.ltn.com.tw/rss/business.xml",
-    category: "経済",
     lang: "zh",
   },
   {
-    name: "自由時報（政治）",
-    url: "https://news.ltn.com.tw/rss/politics.xml",
+    name: "中央通訊社（両岸）",
+    url: "https://feeds.feedburner.com/rsscna/mainland",
     category: "政治",
     lang: "zh",
   },
   {
-    name: "聯合新聞網（経済）",
-    url: "https://udn.com/rssfeed/news/2/6644",
+    name: "中央通訊社（産経証券）",
+    url: "https://feeds.feedburner.com/rsscna/finance",
     category: "経済",
     lang: "zh",
   },
   {
-    name: "The News Lens",
-    url: "https://www.thenewslens.com/rss",
+    name: "中央通訊社（科技）",
+    url: "https://feeds.feedburner.com/rsscna/technology",
+    category: "テクノロジー",
+    lang: "zh",
+  },
+  // === 台湾メディア（中国語） ===
+  {
+    name: "自由時報",
+    url: "https://news.ltn.com.tw/rss/all.xml",
     category: "総合",
     lang: "zh",
+  },
+  {
+    name: "NewTalk",
+    url: "https://newtalk.tw/rss/all",
+    category: "総合",
+    lang: "zh",
+  },
+  // === 台湾メディア（英語） ===
+  {
+    name: "Focus Taiwan",
+    url: "https://focustaiwan.tw/rss",
+    category: "総合",
+    lang: "en",
   },
   {
     name: "Taipei Times",
@@ -91,16 +76,37 @@ const TAIWAN_FEEDS: FeedSource[] = [
     category: "政治",
     lang: "en",
   },
-  // テクノロジー
   {
-    name: "INSIDE",
-    url: "https://www.inside.com.tw/feed",
-    category: "テクノロジー",
-    lang: "zh",
+    name: "Taiwan News",
+    url: "https://www.taiwannews.com.tw/en/rss",
+    category: "総合",
+    lang: "en",
+  },
+  // === 日本メディア ===
+  {
+    name: "NHK",
+    url: "https://www.nhk.or.jp/rss/news/cat0.xml",
+    category: "国際",
+    lang: "ja",
+  },
+  {
+    name: "共同通信",
+    url: "https://english.kyodonews.net/rss/all.xml",
+    category: "国際",
+    lang: "en",
+    filter: (title) => /taiwan|taipei|tsmc|foxconn|taiex/i.test(title),
+  },
+  // === 台湾政府系 ===
+  {
+    name: "Taiwan Today",
+    url: "https://api.taiwantoday.tw/en/rss.php",
+    category: "政治",
+    lang: "en",
   },
 ];
 
 const MAX_PER_SOURCE = 3;
+const HOURS_24 = 24 * 60 * 60 * 1000;
 
 export async function fetchAllFeeds(): Promise<RSSArticle[]> {
   const results = await Promise.allSettled(
@@ -127,15 +133,18 @@ export async function fetchAllFeeds(): Promise<RSSArticle[]> {
   }
 
   console.log(
-    `[rss] Total: ${successCount}/${TAIWAN_FEEDS.length} feeds succeeded`
+    `[rss] Total: ${successCount}/${TAIWAN_FEEDS.length} feeds succeeded, ${failCount} failed`
   );
+
+  if (successCount < 3) {
+    console.error(`[rss] Only ${successCount} feeds succeeded (minimum 3 required)`);
+  }
 
   // 均等にラウンドロビンで選択
   const articles: RSSArticle[] = [];
   const sources = Array.from(articlesBySource.values());
-  const maxRounds = MAX_PER_SOURCE;
 
-  for (let round = 0; round < maxRounds; round++) {
+  for (let round = 0; round < MAX_PER_SOURCE; round++) {
     for (const sourceArticles of sources) {
       if (round < sourceArticles.length) {
         articles.push(sourceArticles[round]);
@@ -168,8 +177,17 @@ export async function fetchAllFeeds(): Promise<RSSArticle[]> {
 async function fetchFeed(feedSource: FeedSource): Promise<RSSArticle[]> {
   try {
     const feed = await parser.parseURL(feedSource.url);
+    const now = Date.now();
 
-    let items = (feed.items || []).slice(0, 10);
+    let items = (feed.items || []).slice(0, 15);
+
+    // 直近24時間以内の記事のみ
+    items = items.filter((item) => {
+      const pubDate = item.isoDate || item.pubDate;
+      if (!pubDate) return true; // 日付不明は含める
+      const diff = now - new Date(pubDate).getTime();
+      return diff < HOURS_24;
+    });
 
     // ソース固有のフィルタ（Taiwan関連のみ等）
     if (feedSource.filter) {
