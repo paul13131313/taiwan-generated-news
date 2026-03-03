@@ -1,0 +1,231 @@
+import Anthropic from "@anthropic-ai/sdk";
+import type { RSSArticle, MarketData, WeatherData, TaiwanNewsData } from "./types";
+
+function createClient() {
+  const key = process.env.ANTHROPIC_API_KEY;
+  if (!key) return null as unknown as Anthropic;
+  return new Anthropic({ apiKey: key });
+}
+
+const client = createClient();
+
+const SYSTEM_PROMPT = `あなたは「台灣生成新聞」の紙面編集AIです。
+台湾現地メディアの報道記事を日本語に翻訳・要約し、新聞紙面を構成してください。
+
+## 読者ターゲット
+台湾に関心のある日本人ビジネスパーソン（特に台湾進出を検討する企業担当者）
+
+## 文体ルール
+- 硬質な新聞文体。漢語・熟語を多用
+- 体言止めを活用し、簡潔に
+- 「〇〇によると」形式で出典を明記
+- 数字は算用数字（例: 68店舗、2.5%増）
+
+## 制約
+- RSS記事に含まれる事実のみ使用。捏造厳禁
+- 各記事に必ずsource（出典名とURL）を付与
+- 画像生成プロンプトは英語で、写真報道風のスタイル指示を含める
+- JSONのみ出力。マークダウンのコードブロックは使わない`;
+
+export async function generateNewspaper(
+  articles: RSSArticle[],
+  marketData: { twdJpy: MarketData; taiex: MarketData },
+  weather: { taipei: WeatherData; kaohsiung: WeatherData },
+  issueNumber: number
+): Promise<TaiwanNewsData> {
+  const today = new Date();
+  const dateStr = formatJapaneseDate(today);
+  const dayOfWeek = ["日", "月", "火", "水", "木", "金", "土"][today.getDay()];
+
+  const articleList = articles
+    .map(
+      (a, i) =>
+        `${i + 1}. [${a.category}] ${a.title} (${a.source}) — ${a.summary} — URL: ${a.url}`
+    )
+    .join("\n");
+
+  const userPrompt = `以下の台湾メディアRSS記事から新聞紙面を構成してください。
+
+## 今日の情報
+- 日付: ${dateStr}（${dayOfWeek}）
+- 号数: No. ${String(issueNumber).padStart(3, "0")}
+- 為替: TWD/JPY ${marketData.twdJpy.value}
+- TAIEX: ${marketData.taiex.value}
+- 台北天気: ${weather.taipei.condition} ${weather.taipei.temp}°C
+- 高雄天気: ${weather.kaohsiung.condition} ${weather.kaohsiung.temp}°C
+
+## RSS記事一覧
+${articleList}
+
+## 出力JSON構造
+{
+  "hero": {
+    "category": "カテゴリ（POLITICS/ECONOMY/TECH/SOCIETY等）",
+    "headline": "一面見出し（日本語、25字以内）",
+    "lead": "リード文（日本語、300〜400字。〇〇によると形式で出典明記）",
+    "source": { "name": "出典メディア名", "url": "記事URL" }
+  },
+  "headlines": [
+    {
+      "category": "CATEGORY",
+      "headline": "見出し（日本語、20字以内）",
+      "excerpt": "要約（日本語、80〜100字）",
+      "source": { "name": "出典名", "url": "URL" }
+    }
+  ],
+  "trivia": {
+    "label": "Taiwan Trivia",
+    "title": "台湾豆知識のタイトル",
+    "body": "台湾に関する興味深い豆知識（80字以内）",
+    "source": { "name": "出典名", "url": "URL" }
+  },
+  "business": {
+    "metrics": [
+      { "value": "数値", "unit": "説明（10字以内）" }
+    ],
+    "articles": [
+      {
+        "category": "ECONOMY",
+        "headline": "見出し",
+        "excerpt": "要約",
+        "source": { "name": "出典名", "url": "URL" }
+      }
+    ],
+    "bizWord": {
+      "label": "Biz Word",
+      "title": "台湾ビジネス用語",
+      "body": "用語の解説（80字以内）"
+    }
+  },
+  "japanEntry": {
+    "metrics": [
+      { "value": "数値", "unit": "説明" }
+    ],
+    "cards": [
+      {
+        "type": "success",
+        "brand": "企業名",
+        "detail": "進出状況の説明（50字以内）",
+        "number": "数値",
+        "numberLabel": "単位",
+        "source": { "name": "出典名", "url": "URL" }
+      }
+    ],
+    "articles": [
+      {
+        "category": "BUSINESS",
+        "headline": "見出し",
+        "source": { "name": "出典名", "url": "URL" }
+      }
+    ],
+    "caseStudy": {
+      "label": "失敗に学ぶ台湾進出",
+      "title": "ケースタイトル",
+      "body": "失敗事例の分析（150字以内。出典明記）",
+      "source": { "name": "出典名", "url": "URL" }
+    },
+    "trendWatch": {
+      "label": "Trend Watch",
+      "title": "トレンドタイトル",
+      "body": "台湾ビジネストレンドの分析（100字以内）",
+      "source": { "name": "出典名", "url": "URL" }
+    }
+  },
+  "culture": {
+    "featured": [
+      {
+        "category": "CULTURE",
+        "headline": "見出し",
+        "excerpt": "要約",
+        "source": { "name": "出典名", "url": "URL" }
+      }
+    ],
+    "articles": [
+      {
+        "category": "CULTURE",
+        "headline": "見出し",
+        "source": { "name": "出典名", "url": "URL" }
+      }
+    ]
+  },
+  "lifeInTaiwan": {
+    "articles": [
+      {
+        "category": "LIFE",
+        "headline": "見出し",
+        "excerpt": "要約",
+        "source": { "name": "出典名", "url": "URL" }
+      }
+    ],
+    "lifeTip": {
+      "label": "Life Tip",
+      "title": "台湾生活のヒント",
+      "body": "実用的なアドバイス（80字以内）",
+      "source": { "name": "出典名", "url": "URL" }
+    }
+  },
+  "taiwanPhrase": {
+    "phrase": "台湾華語のフレーズ（繁体字）",
+    "pronunciation": "カタカナ読み",
+    "meaning": "ビジネスで使える場面の説明"
+  },
+  "imagePrompt": "Hero image prompt in English. Photojournalistic, editorial style, cinematic lighting, no text overlay. Describe the scene based on the hero article content."
+}
+
+## 必須ルール
+- headlinesは5本（hero記事と重複しないこと）
+- business.metricsは3本、business.articlesは2本
+- japanEntry.metricsは3本、japanEntry.cardsは2〜4本（successとstruggleを混ぜる）
+- japanEntry.articlesは1〜2本
+- culture.featuredは2本、culture.articlesは1本
+- lifeInTaiwan.articlesは2本
+- RSS記事にない情報は使わない（japanEntryのcardsとcaseStudyは既知の一般的事実でOK）
+- 全sourceにnameとurlを含める（urlがない場合は空文字）
+- imagePromptは英語40語以内`;
+
+  const response = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 6000,
+    system: SYSTEM_PROMPT,
+    messages: [{ role: "user", content: userPrompt }],
+  });
+
+  const text =
+    response.content[0].type === "text" ? response.content[0].text : "";
+  const parsed = parseGeneratedJson(text);
+
+  // Merge with date/issue/market/weather info
+  return {
+    date: `${dateStr}（${dayOfWeek}）`,
+    issueNumber: `No. ${String(issueNumber).padStart(3, "0")}`,
+    weather,
+    stockData: marketData,
+    ...parsed,
+  };
+}
+
+function parseGeneratedJson(text: string): Omit<TaiwanNewsData, "date" | "issueNumber" | "weather" | "stockData"> {
+  // Remove markdown code block wrapper if present
+  let cleaned = text.trim();
+  if (cleaned.startsWith("```")) {
+    cleaned = cleaned.replace(/^```(?:json)?\s*/, "").replace(/\s*```$/, "");
+  }
+
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    // Try to extract JSON from the text
+    const match = cleaned.match(/\{[\s\S]*\}/);
+    if (match) {
+      return JSON.parse(match[0]);
+    }
+    throw new Error("Failed to parse Claude response as JSON");
+  }
+}
+
+function formatJapaneseDate(date: Date): string {
+  const y = date.getFullYear();
+  const m = date.getMonth() + 1;
+  const d = date.getDate();
+  return `${y}年${m}月${d}日`;
+}
