@@ -388,8 +388,96 @@
     .we-comm { margin: 32px -20px 0; padding: 24px 20px; }
   }
 
+  /* SOURCE LINK */
+  .source-link {
+    display: inline-block;
+    font-family: var(--en);
+    font-size: 0.62rem;
+    color: var(--gray);
+    text-decoration: none;
+    margin-top: 4px;
+    transition: color 0.2s;
+  }
+  .source-link:hover { color: var(--accent); }
+  .source-link::before { content: '📎 '; font-size: 0.55rem; }
+  .hl .source-link { margin-top: 2px; }
+
+  /* CASE STUDY BOX */
+  .case-study {
+    margin: 24px 0;
+    padding: 20px;
+    background: #fff8f6;
+    border: 1px solid #ffe0d6;
+    border-left: 4px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+  .case-study .cs-label {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .case-study h4 { font-size: 0.9rem; font-weight: 700; margin-top: 4px; line-height: 1.5; }
+  .case-study p { font-size: 0.8rem; line-height: 1.75; color: #555; margin-top: 6px; }
+  .case-study .cs-source {
+    font-family: var(--en);
+    font-size: 0.6rem;
+    color: var(--gray);
+    margin-top: 8px;
+  }
+  .case-study .cs-source a { color: var(--gray); text-decoration: none; }
+  .case-study .cs-source a:hover { color: var(--accent); }
+
+  /* SUCCESS / STRUGGLE CARDS */
+  .entry-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 18px 0;
+  }
+  .entry-card {
+    padding: 16px;
+    background: var(--bg);
+    border-radius: 6px;
+    border: 1px solid var(--line);
+  }
+  .entry-card .ec-badge {
+    font-family: var(--mono);
+    font-size: 0.5rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+  .ec-badge.success { background: #e8f5e9; color: #2e7d32; }
+  .ec-badge.struggle { background: #fff3e0; color: #e65100; }
+  .entry-card .ec-brand {
+    font-size: 0.95rem;
+    font-weight: 900;
+    margin-top: 6px;
+    line-height: 1.3;
+  }
+  .entry-card .ec-detail { font-size: 0.76rem; line-height: 1.7; color: #555; margin-top: 4px; }
+  .entry-card .ec-num {
+    font-family: var(--mono);
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--black);
+    margin-top: 8px;
+  }
+  .entry-card .ec-num-label { font-size: 0.62rem; color: var(--gray); }
+  .entry-card .source-link { font-size: 0.58rem; }
+
+  @media (max-width: 600px) {
+    .entry-cards { grid-template-columns: 1fr; }
+  }
+
   @keyframes fi { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .hero, .sec, .headlines, .hl-grid, .col-box, .num-highlight, .we-comm, .cta-banner { animation: fi 0.5s ease both; }
+  .hero, .sec, .headlines, .hl-grid, .col-box, .num-highlight, .we-comm, .cta-banner, .case-study, .entry-cards { animation: fi 0.5s ease both; }
   .hero { animation-delay: 0.05s; }
 </style>
 </head>
@@ -421,6 +509,7 @@
       <h1>2・28事件から79年——頼清徳総統「台湾を守ることが最大の使命」</h1>
       <p class="lead">1947年の国民党政権による市民弾圧事件から79年を迎えた2月28日、頼清徳（らい・せいとく）総統は高雄市の記念式典で演説。「中国が拡張の野心を高め続けている今、台湾人の自己防衛の決意に国際社会の注目が集まっている」と述べ、国防と社会全体の防衛体制強化を宣言した。</p>
       <p class="meta">Source: 中央通訊社 / 聯合報 — AI翻訳・要約</p>
+      <a href="https://japan.focustaiwan.tw/society/202602280003" target="_blank" rel="noopener" class="source-link">中央社フォーカス台湾</a>
     </article>
     <hr class="rule">
     <div class="sec"><span class="sec-en">Headlines</span><span class="sec-jp">本日の注目</span></div>
@@ -429,22 +518,25 @@
         <span class="hl-tag">Diplomacy</span>
         <h3>トランプ大統領、3月末に訪中へ——台湾への武器売却は棚上げか</h3>
         <p>米ホワイトハウスが3月31日〜4月2日の訪中を発表。WSJ紙は台湾向け武器売却の棚上げを報道。</p>
+        <a href="https://www.taipeitimes.com/News/front/archives/2026/03/01/2003853056" target="_blank" rel="noopener" class="source-link">Taipei Times</a>
       </div>
       <div class="hl-col">
         <span class="hl-tag">Industry</span>
         <h3>鴻海、三菱ふそうとEVバス合弁——日本に生産拠点を確保</h3>
         <p>台湾・鴻海と三菱ふそうが50%出資の合弁を2026年後半に設立。富山でEVバス生産へ。</p>
+        <a href="https://www.nikkei.com/article/DGXZQOUC2154F0R20C26A1000000/" target="_blank" rel="noopener" class="source-link">日本経済新聞</a>
       </div>
     </div>
     <div class="headlines">
-      <div class="hl"><span class="n">03</span><div class="hl-body"><span class="hl-tag">Baseball</span><h3>WBC台湾代表、日ハム戦で1-6敗戦も古林睿煬が最速156キロ——王貞治氏「一緒に米国へ」</h3></div></div>
-      <div class="hl"><span class="n">04</span><div class="hl-body"><span class="hl-tag">Wildlife</span><h3>台北市立動物園のマレーグマ2頭、繁殖のため札幌・円山動物園へ寄贈——3月下旬出発</h3></div></div>
-      <div class="hl"><span class="n">05</span><div class="hl-body"><span class="hl-tag">Security</span><h3>中国から台湾重要インフラへのサイバー攻撃、1日平均263万回——前年比17万回増</h3></div></div>
+      <div class="hl"><span class="n">03</span><div class="hl-body"><span class="hl-tag">Baseball</span><h3>WBC台湾代表、日ハム戦で1-6敗戦も古林睿煬が最速156キロ——王貞治氏「一緒に米国へ」</h3><a href="https://japan.focustaiwan.tw/entertainment-sport/202602280003" target="_blank" rel="noopener" class="source-link">中央社フォーカス台湾</a></div></div>
+      <div class="hl"><span class="n">04</span><div class="hl-body"><span class="hl-tag">Wildlife</span><h3>台北市立動物園のマレーグマ2頭、繁殖のため札幌・円山動物園へ寄贈——3月下旬出発</h3><a href="https://japan.focustaiwan.tw/society/202602270006" target="_blank" rel="noopener" class="source-link">中央社フォーカス台湾</a></div></div>
+      <div class="hl"><span class="n">05</span><div class="hl-body"><span class="hl-tag">Security</span><h3>中国から台湾重要インフラへのサイバー攻撃、1日平均263万回——前年比17万回増</h3><a href="https://www.cna.com.tw/news/aipl/202601040030.aspx" target="_blank" rel="noopener" class="source-link">中央通訊社</a></div></div>
     </div>
     <div class="col-box">
       <div class="col-label">Taiwan Trivia</div>
       <h4>台湾の新紙幣デザイン、投票1位は「島々の生態系」</h4>
       <p>中央銀行が紙幣の改刷を決定。12のテーマ候補から「島々の生態系」が13万票超でトップ。2位は「保護される動物の美しさ」。新紙幣は約2年半後に発行見通し。</p>
+      <a href="https://japan.focustaiwan.tw/society/202602140001" target="_blank" rel="noopener" class="source-link">中央社フォーカス台湾</a>
     </div>
     <div class="sec"><span class="sec-en">Business</span><span class="sec-jp">台湾ビジネス</span></div>
     <div class="num-highlight">
@@ -453,14 +545,69 @@
       <div class="num-card"><div class="nc-val">100+</div><div class="nc-unit">台湾高鉄<br>新規採用人数</div></div>
     </div>
     <div class="headlines">
-      <div class="hl"><span class="n">01</span><div class="hl-body"><h3>TSMC、2ナノ量産を開始——「技術で先んじる優位性を拡大する」</h3><p class="hl-excerpt">世界最先端の2ナノプロセス量産に着手。AI半導体の性能向上に直結する技術的マイルストーン。</p></div></div>
-      <div class="hl"><span class="n">02</span><div class="hl-body"><h3>エイスース、スマホ事業撤退の観測——「2026年の新機種計画なし」</h3><p class="hl-excerpt">PC大手ASUSが「2026年に新機種計画なし」。ゲーミングPC・AI領域に注力へ。</p></div></div>
-      <div class="hl"><span class="n">03</span><div class="hl-body"><h3>台湾高鉄、新型車両導入で大規模採用へ——整備士など100人超</h3><p class="hl-excerpt">台湾新幹線が新型車両に合わせ、車両整備士を中心に100名以上を募集。</p></div></div>
+      <div class="hl"><span class="n">01</span><div class="hl-body"><h3>TSMC、2ナノ量産を開始——「技術で先んじる優位性を拡大する」</h3><p class="hl-excerpt">世界最先端の2ナノプロセス量産に着手。AI半導体の性能向上に直結する技術的マイルストーン。</p><a href="https://www.nikkei.com/article/DGXZQOGM302DF0Q5A231C2000000/" target="_blank" rel="noopener" class="source-link">日本経済新聞</a></div></div>
+      <div class="hl"><span class="n">02</span><div class="hl-body"><h3>エイスース、スマホ事業撤退の観測——「2026年の新機種計画なし」</h3><p class="hl-excerpt">PC大手ASUSが「2026年に新機種計画なし」。ゲーミングPC・AI領域に注力へ。</p><a href="https://japan.focustaiwan.tw/economy/202601035004" target="_blank" rel="noopener" class="source-link">中央社フォーカス台湾</a></div></div>
+      <div class="hl"><span class="n">03</span><div class="hl-body"><h3>台湾高鉄、新型車両導入で大規模採用へ——整備士など100人超</h3><p class="hl-excerpt">台湾新幹線が新型車両に合わせ、車両整備士を中心に100名以上を募集。</p><a href="https://japan.focustaiwan.tw/economy/202601020001" target="_blank" rel="noopener" class="source-link">中央社フォーカス台湾</a></div></div>
     </div>
     <div class="col-box">
       <div class="col-label">Biz Word</div>
       <h4>「兩岸（りょうがん）」——両方の岸</h4>
       <p>台湾海峡を挟む台湾と中国大陸の関係を指す中国語。ビジネスでは両岸に拠点を持つ企業を「兩岸企業」と呼ぶ。台湾進出の際、この言葉の政治的ニュアンスを理解しておくことが重要。</p>
+    </div>
+    <div class="sec"><span class="sec-en">Japan Entry</span><span class="sec-jp">日本企業の台湾進出</span></div>
+    <div class="num-highlight">
+      <div class="num-card"><div class="nc-val">2,988</div><div class="nc-unit">在台日本企業数<br>2024年7月</div></div>
+      <div class="num-card"><div class="nc-val">-4.4%</div><div class="nc-unit">前回比<br>136社減少</div></div>
+      <div class="num-card"><div class="nc-val">676万</div><div class="nc-unit">台湾→訪日<br>2025年過去最高</div></div>
+    </div>
+    <div class="entry-cards">
+      <div class="entry-card">
+        <span class="ec-badge success">Success</span>
+        <div class="ec-brand">ニトリ（宜得利家居）</div>
+        <div class="ec-detail">台湾最大の海外市場。2024年売上約330億円。年10店ペースで出店し、長期目標200店舗。</div>
+        <div class="ec-num">68<span class="ec-num-label"> 店舗（2025年3月）</span></div>
+        <a href="https://www.nitorihd.co.jp/news/items/d1dee0d5fe3a4fb746383d04bdb9644d.pdf" target="_blank" rel="noopener" class="source-link">ニトリHD プレスリリース</a>
+      </div>
+      <div class="entry-card">
+        <span class="ec-badge success">Success</span>
+        <div class="ec-brand">DON DON DONKI（唐吉軻德）</div>
+        <div class="ec-detail">2021年西門町1号店から急成長。台北・台中・高雄に展開。最大店舗は高雄の約3,000㎡。</div>
+        <div class="ec-num">6<span class="ec-num-label"> 店舗（2024年12月）</span></div>
+        <a href="https://digitalpr.jp/r/99424" target="_blank" rel="noopener" class="source-link">PPIH プレスリリース</a>
+      </div>
+      <div class="entry-card">
+        <span class="ec-badge success">Success</span>
+        <div class="ec-brand">ダイソー（DAISO）</div>
+        <div class="ec-detail">2001年に台湾初進出（海外1号店）。DAISO・Standard Products・THREEPPYの3ブランド展開。</div>
+        <div class="ec-num">100<span class="ec-num-label"> 店舗達成（2024年）</span></div>
+        <a href="https://www.daiso-sangyo.co.jp/info/news/40571" target="_blank" rel="noopener" class="source-link">DAISO公式</a>
+      </div>
+      <div class="entry-card">
+        <span class="ec-badge struggle">Struggle</span>
+        <div class="ec-brand">日本ラーメンチェーン各社</div>
+        <div class="ec-detail">蔦、一幻、山頭火、名代富士そば等が進出後約2年で撤退。過当競争と現地化不足が原因。</div>
+        <div class="ec-num">~2年<span class="ec-num-label"> 平均撤退期間</span></div>
+        <a href="https://www.nippon.com/ja/japan-topics/g00751/" target="_blank" rel="noopener" class="source-link">nippon.com</a>
+      </div>
+    </div>
+    <div class="headlines">
+      <div class="hl"><span class="n">01</span><div class="hl-body"><span class="hl-tag">EC</span><h3>越境EC支援ジグザグ、2026年3月に台北子会社を設立——初の海外拠点</h3><p class="hl-excerpt">アニメグッズ・ホビー商品を中心に、日本ECの台湾現地マーケティングを支援。</p><a href="https://www.nikkei.com/article/DGXZQOUC169CF0W5A211C2000000/" target="_blank" rel="noopener" class="source-link">日本経済新聞</a></div></div>
+      <div class="hl"><span class="n">02</span><div class="hl-body"><span class="hl-tag">Retail</span><h3>ファミリーマート台湾、4,200店超——独自アパレル「コンビニウェア」を海外初展開</h3><p class="hl-excerpt">台湾約700店でオリジナル衣料品の販売を開始。アプリ会員基盤が成長の鍵。</p><a href="https://www.family.co.jp/company/news_releases/2024/20241113_02.html" target="_blank" rel="noopener" class="source-link">ファミリーマート プレスリリース</a></div></div>
+      <div class="hl"><span class="n">03</span><div class="hl-body"><span class="hl-tag">Market</span><h3>台湾B2C EC市場、2029年に268.6億ドル規模へ——ライブコマースが牽引</h3><p class="hl-excerpt">2024年の195.2億ドルから成長予測。台湾ネットユーザーの7割がライブ配信で購買経験あり。</p><a href="https://www.globenewswire.com/news-release/2026/02/03/3230806/28124/en/Taiwan-B2C-Ecommerce-Business-Report-2025-A-26-86-Billion-Market-by-2029-from-19-52-Billion-in-2024-Size-Forecast-by-Value-and-Volume-Across-80-KPIs.html" target="_blank" rel="noopener" class="source-link">GlobeNewsWire</a></div></div>
+    </div>
+    <div class="case-study">
+      <div class="cs-label">Case Study — 台湾進出の落とし穴</div>
+      <h4>なぜ日本のラーメン店は台湾で撤退するのか</h4>
+      <p>ミシュラン一つ星の「蔦」、北海道の人気店「一幻」、老舗「山頭火」——名だたる日本のラーメンチェーンが台湾に進出し、わずか約2年で撤退している。元統一超商（セブンイレブン台湾）社長の徐重仁氏は、日本企業が台湾で失敗する2大要因として「完璧主義を捨てられないこと」と「決断の勇気がないこと」を指摘。日本式のやり方に固執し、スピード感のある台湾市場で意思決定が遅れることが致命傷になるという。また、南部は甘め・北部は塩味寄りという地域差への対応不足も、飲食チェーンに共通する落とし穴だ。</p>
+      <div class="cs-source">
+        出典: <a href="https://xtrend.nikkei.com/atcl/contents/18/00268/00035/" target="_blank" rel="noopener">日経クロストレンド</a> / <a href="https://www.nippon.com/ja/japan-topics/g00751/" target="_blank" rel="noopener">nippon.com</a>
+      </div>
+    </div>
+    <div class="col-box">
+      <div class="col-label">Trend Watch</div>
+      <h4>2025年台湾ヒット商品——「翻轉布丁」「パクチー商品」「生ドーナツ」</h4>
+      <p>統一企業の「翻轉布丁（ひっくり返すプリン）」が予約殺到の大ヒット。パクチー味スナックは発売日に完売し転売価格5倍に。日本発「I'm donut?」は台北初上陸で行列が社会現象化するも、Google評価1.6点に急落する波乱も。</p>
+      <a href="https://sterfield.co.jp/blog/blog-30/" target="_blank" rel="noopener" class="source-link">Sterfield Blog</a>
     </div>
     <div class="sec"><span class="sec-en">Culture</span><span class="sec-jp">台湾カルチャー</span></div>
     <div class="hl-grid">
@@ -468,16 +615,18 @@
         <span class="hl-tag">Literature</span>
         <h3>「台湾漫遊録」英訳版が国際ブッカー賞候補に</h3>
         <p>楊双子の小説が候補作に選出。台湾文学としては「自転車泥棒」以来8年ぶりの快挙。</p>
+        <a href="https://japan.focustaiwan.tw/culture/202602250001" target="_blank" rel="noopener" class="source-link">中央社フォーカス台湾</a>
       </div>
       <div class="hl-col">
         <span class="hl-tag">Film</span>
         <h3>「陽光女子合唱団」が台湾映画歴代興収1位に迫る</h3>
         <p>台湾映画の新作が大ヒット続行中。出演のジュディ・オングが感謝のコメントを発表。</p>
+        <a href="https://japan.focustaiwan.tw/entertainment-sport/202602130008" target="_blank" rel="noopener" class="source-link">中央社フォーカス台湾</a>
       </div>
     </div>
     <div class="headlines">
-      <div class="hl"><span class="n">03</span><div class="hl-body"><h3>阿里山鉄道の新型観光車両「森里号」、7月にも運行開始予定</h3></div></div>
-      <div class="hl"><span class="n">04</span><div class="hl-body"><h3>台北漫画・アニメフェス閉幕——50万5千人超が来場</h3></div></div>
+      <div class="hl"><span class="n">03</span><div class="hl-body"><h3>阿里山鉄道の新型観光車両「森里号」、7月にも運行開始予定</h3><a href="https://japan.focustaiwan.tw/travel/202602210001" target="_blank" rel="noopener" class="source-link">中央社フォーカス台湾</a></div></div>
+      <div class="hl"><span class="n">04</span><div class="hl-body"><h3>台北漫画・アニメフェス閉幕——50万5千人超が来場</h3><a href="https://japan.focustaiwan.tw/culture/202602100006" target="_blank" rel="noopener" class="source-link">中央社フォーカス台湾</a></div></div>
     </div>
     <div class="cta-banner">
       <div class="cb-head">台湾のこと、毎朝3分でわかる。</div>
@@ -486,13 +635,14 @@
     </div>
     <div class="sec"><span class="sec-en">Life in Taiwan</span><span class="sec-jp">台湾で暮らす</span></div>
     <div class="headlines">
-      <div class="hl"><span class="n">01</span><div class="hl-body"><h3>台北MRT、Apple Payなどモバイル決済に来月3日から対応</h3><p class="hl-excerpt">悠遊カード不要で乗車可能に。在台日本人の日常移動がさらに便利に。</p></div></div>
-      <div class="hl"><span class="n">02</span><div class="hl-body"><h3>台湾の運転免許・日本語翻訳文の申請が年間44万件超——セルフドライブ旅行が急増</h3></div></div>
+      <div class="hl"><span class="n">01</span><div class="hl-body"><h3>台北MRT、Apple Payなどモバイル決済に来月3日から対応</h3><p class="hl-excerpt">悠遊カード不要で乗車可能に。在台日本人の日常移動がさらに便利に。</p><a href="https://www.inside.com.tw/article/40399-taipei-metro-pay-by-phone" target="_blank" rel="noopener" class="source-link">INSIDE Taiwan</a></div></div>
+      <div class="hl"><span class="n">02</span><div class="hl-body"><h3>台湾の運転免許・日本語翻訳文の申請が年間44万件超——セルフドライブ旅行が急増</h3><a href="https://japan.focustaiwan.tw/society/202602140003" target="_blank" rel="noopener" class="source-link">中央社フォーカス台湾</a></div></div>
     </div>
     <div class="col-box">
       <div class="col-label">Life Tip</div>
       <h4>コンビニでAI観光案内が利用可能に</h4>
       <p>台湾全土のセブンイレブンでQRコード式の観光案内が開始。日本語対応のAIチャットでスポット案内やルート提案が受けられる。</p>
+      <a href="https://japan.focustaiwan.tw/travel/202601070002" target="_blank" rel="noopener" class="source-link">中央社フォーカス台湾</a>
     </div>
     <div class="we-comm">
       <div class="we-tag">We Communication</div>
