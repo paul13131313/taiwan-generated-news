@@ -368,13 +368,17 @@ ${renderColumnBox(data.business.bizWord)}
 
 ${renderSection("Japan Entry", "日本企業の台湾進出")}
 
-${renderEntryCards(data.japanEntry.cards)}
+${data.japanEntry.cards && data.japanEntry.cards.length > 0
+  ? renderEntryCards(data.japanEntry.cards)
+  : `<p style="font-size: 0.85rem; color: #666; margin: 16px 0; line-height: 1.8;">本日、日本企業の台湾進出に関する新たなニュースはありませんでした。</p>`}
 
 ${japanEntryArticles.length > 0 ? `<div class="headlines">
   ${japanEntryArticles.map((a, i) => renderHeadline(a, i + 1)).join("")}
 </div>` : ""}
 
-${renderCaseStudy(data.japanEntry.caseStudy)}
+${data.japanEntry.caseStudy && data.japanEntry.caseStudy.title !== "本日の該当事例はありません"
+  ? renderCaseStudy(data.japanEntry.caseStudy)
+  : `<p style="font-size: 0.82rem; color: #888; margin: 16px 0;">本日の該当事例はありません。</p>`}
 
 ${renderSection("Culture", "台湾カルチャー")}
 
