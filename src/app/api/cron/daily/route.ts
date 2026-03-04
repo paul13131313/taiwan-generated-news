@@ -4,11 +4,20 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 120;
 
 export async function GET(request: Request) {
+  console.log("[cron] Request received");
+
   // Verify Vercel Cron secret
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const cronSecret = process.env.CRON_SECRET;
+
+  if (!cronSecret) {
+    console.log("[cron] CRON_SECRET not set, skipping auth");
+  } else if (authHeader !== "Bearer " + cronSecret) {
+    console.log("[cron] Unauthorized. Header:", authHeader?.substring(0, 20));
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  console.log("[cron] Auth passed");
 
   const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
@@ -24,6 +33,7 @@ export async function GET(request: Request) {
       },
     });
 
+    console.log("[cron] Starting generation...");
     const genResult = await genRes.json();
 
     if (!genRes.ok) {
