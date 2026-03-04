@@ -20,6 +20,13 @@ export interface WeatherData {
   condition: string;
 }
 
+// ===== Glossary =====
+export interface GlossaryItem {
+  term: string;
+  reading?: string;
+  explanation: string;
+}
+
 // ===== Newspaper Data Structure =====
 export interface SourceLink {
   name: string;
@@ -38,6 +45,7 @@ export interface HeroArticle {
   headline: string;
   lead: string;
   source: SourceLink;
+  glossary?: GlossaryItem[];
 }
 
 export interface MetricCard {
@@ -86,6 +94,7 @@ export interface TaiwanNewsData {
     metrics: MetricCard[];
     articles: HeadlineArticle[];
     bizWord: ColumnBox;
+    glossary?: GlossaryItem[];
   };
   japanEntry: {
     metrics: MetricCard[];
@@ -94,14 +103,17 @@ export interface TaiwanNewsData {
     caseStudy: CaseStudyBox;
     trendWatch: ColumnBox;
     isStock?: boolean; // ストック記事（過去事例）を使用中かどうか
+    glossary?: GlossaryItem[];
   };
   culture: {
     featured: HeadlineArticle[];
     articles: HeadlineArticle[];
+    glossary?: GlossaryItem[];
   };
   lifeInTaiwan: {
     articles: HeadlineArticle[];
     lifeTip: ColumnBox;
+    glossary?: GlossaryItem[];
   };
   taiwanPhrase?: {
     phrase: string;

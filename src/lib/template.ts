@@ -6,6 +6,7 @@ import type {
   ColumnBox,
   CaseStudyBox,
   SourceLink,
+  GlossaryItem,
 } from "./types";
 
 // ===== CSS (extracted from taiwan-news-final.html, with spacing improvements) =====
@@ -124,6 +125,14 @@ body {
 .entry-card .ec-num { font-family: var(--mono); font-size: 1.2rem; font-weight: 900; color: var(--black); margin-top: 8px; }
 .entry-card .ec-num-label { font-size: 0.62rem; color: var(--gray); }
 .entry-card .source-link { font-size: 0.58rem; }
+.glossary-box { margin: 16px 0 28px; padding: 14px 18px; background: #fafafa; border: 1px solid var(--line); border-radius: 6px; }
+.glossary-box .gl-label { font-family: var(--mono); font-size: 0.55rem; font-weight: 800; letter-spacing: 0.12em; color: var(--gray); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.glossary-box .gl-label::before { content: '📖'; font-size: 0.7rem; }
+.glossary-box dl { margin: 0; }
+.glossary-box dt { font-size: 0.78rem; font-weight: 700; color: var(--black); margin-top: 6px; display: inline; }
+.glossary-box dt .gl-reading { font-weight: 500; color: var(--gray); font-size: 0.72rem; }
+.glossary-box dd { font-size: 0.75rem; color: #555; margin-left: 0; display: inline; margin-right: 0; }
+.glossary-box dd::after { content: ''; display: block; margin-bottom: 2px; }
 @media (max-width: 600px) {
   body { background: var(--white); }
   .newspaper { box-shadow: none; }
@@ -254,6 +263,21 @@ function renderCaseStudy(cs: CaseStudyBox): string {
     </div>`;
 }
 
+function renderGlossary(items?: GlossaryItem[]): string {
+  if (!items || items.length === 0) return "";
+  const entries = items
+    .map((g) => {
+      const reading = g.reading ? ` <span class="gl-reading">（${esc(g.reading)}）</span>` : "";
+      return `<dt>${esc(g.term)}${reading} …</dt> <dd>${esc(g.explanation)}</dd>`;
+    })
+    .join("");
+  return `
+    <div class="glossary-box">
+      <div class="gl-label">用語解説</div>
+      <dl>${entries}</dl>
+    </div>`;
+}
+
 function renderSection(en: string, jp: string): string {
   return `<div class="sec"><span class="sec-en">${esc(en)}</span><span class="sec-jp">${esc(jp)}</span></div>`;
 }
@@ -345,6 +369,8 @@ ${ogImage ? `<meta name="twitter:image" content="${esc(ogImage)}">` : ""}
   ${renderSourceRef(data.hero.source)}
 </article>
 
+${renderGlossary(data.hero.glossary)}
+
 <hr class="rule">
 
 ${renderSection("Headlines", "本日の注目")}
@@ -366,6 +392,8 @@ ${businessArticle.length > 0 ? `<div class="headlines">
 </div>` : ""}
 
 ${renderColumnBox(data.business.bizWord)}
+
+${renderGlossary(data.business.glossary)}
 
 ${renderSection("Japan Entry", "日本企業の台湾進出")}
 
@@ -391,6 +419,8 @@ ${data.japanEntry.caseStudy && data.japanEntry.caseStudy.title !== "本日の該
   ? renderCaseStudy(data.japanEntry.caseStudy)
   : (!data.japanEntry.isStock ? `<p style="font-size: 0.82rem; color: #888; margin: 16px 0;">本日の該当事例はありません。</p>` : "")}
 
+${renderGlossary(data.japanEntry.glossary)}
+
 ${data.culture.featured && data.culture.featured.length > 0 ? `
 ${renderSection("Trending Now", "台湾トレンド")}
 
@@ -402,6 +432,8 @@ ${cultureArticles.length > 0 ? `<div class="headlines">
   ${cultureArticles.map((a, i) => renderHeadline(a, i + 1)).join("")}
 </div>` : ""}
 
+${renderGlossary(data.culture.glossary)}
+
 <hr class="rule">` : ""}
 
 ${renderSection("Life in Taiwan", "台湾で暮らす")}
@@ -411,6 +443,8 @@ ${lifeArticles.length > 0 ? `<div class="headlines">
 </div>` : ""}
 
 ${renderColumnBox(data.lifeInTaiwan.lifeTip)}
+
+${renderGlossary(data.lifeInTaiwan.glossary)}
 
 ${data.taiwanPhrase ? `
 <div class="col-box">
