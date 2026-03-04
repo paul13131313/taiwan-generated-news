@@ -389,8 +389,9 @@ ${japanEntryArticles.length > 0 ? `<div class="headlines">
 
 ${data.japanEntry.caseStudy && data.japanEntry.caseStudy.title !== "本日の該当事例はありません"
   ? renderCaseStudy(data.japanEntry.caseStudy)
-  : `<p style="font-size: 0.82rem; color: #888; margin: 16px 0;">本日の該当事例はありません。</p>`}
+  : (!data.japanEntry.isStock ? `<p style="font-size: 0.82rem; color: #888; margin: 16px 0;">本日の該当事例はありません。</p>` : "")}
 
+${data.culture.featured && data.culture.featured.length > 0 ? `
 ${renderSection("Culture", "台湾カルチャー")}
 
 <div class="hl-grid">
@@ -401,7 +402,7 @@ ${cultureArticles.length > 0 ? `<div class="headlines">
   ${cultureArticles.map((a, i) => renderHeadline(a, i + 1)).join("")}
 </div>` : ""}
 
-<hr class="rule">
+<hr class="rule">` : ""}
 
 ${renderSection("Life in Taiwan", "台湾で暮らす")}
 
