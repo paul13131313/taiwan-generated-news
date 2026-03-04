@@ -196,6 +196,7 @@ function renderHlCol(article: HeadlineArticle): string {
       <h3>${esc(article.headline)}</h3>
       ${article.excerpt ? `<p>${esc(article.excerpt)}</p>` : ""}
       ${renderSourceRef(article.source)}
+      ${renderGlossary(article.glossary)}
     </div>`;
 }
 
@@ -209,6 +210,7 @@ function renderHeadline(article: HeadlineArticle, index: number): string {
         <h3>${esc(article.headline)}</h3>
         ${article.excerpt ? `<p class="hl-excerpt">${esc(article.excerpt)}</p>` : ""}
         ${renderSourceRef(article.source)}
+        ${renderGlossary(article.glossary)}
       </div>
     </div>`;
 }
@@ -393,8 +395,6 @@ ${businessArticle.length > 0 ? `<div class="headlines">
 
 ${renderColumnBox(data.business.bizWord)}
 
-${renderGlossary(data.business.glossary)}
-
 ${renderSection("Japan Entry", "日本企業の台湾進出")}
 
 ${data.japanEntry.isStock
@@ -419,8 +419,6 @@ ${data.japanEntry.caseStudy && data.japanEntry.caseStudy.title !== "本日の該
   ? renderCaseStudy(data.japanEntry.caseStudy)
   : (!data.japanEntry.isStock ? `<p style="font-size: 0.82rem; color: #888; margin: 16px 0;">本日の該当事例はありません。</p>` : "")}
 
-${renderGlossary(data.japanEntry.glossary)}
-
 ${data.culture.featured && data.culture.featured.length > 0 ? `
 ${renderSection("Trending Now", "台湾トレンド")}
 
@@ -432,8 +430,6 @@ ${cultureArticles.length > 0 ? `<div class="headlines">
   ${cultureArticles.map((a, i) => renderHeadline(a, i + 1)).join("")}
 </div>` : ""}
 
-${renderGlossary(data.culture.glossary)}
-
 <hr class="rule">` : ""}
 
 ${renderSection("Life in Taiwan", "台湾で暮らす")}
@@ -443,8 +439,6 @@ ${lifeArticles.length > 0 ? `<div class="headlines">
 </div>` : ""}
 
 ${renderColumnBox(data.lifeInTaiwan.lifeTip)}
-
-${renderGlossary(data.lifeInTaiwan.glossary)}
 
 ${data.taiwanPhrase ? `
 <div class="col-box">
