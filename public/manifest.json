@@ -2,7 +2,7 @@
   "name": "台灣生成新聞",
   "short_name": "台灣生成新聞",
   "description": "台湾のニュースを、AIが翻訳・要約して毎日お届け",
-  "start_url": "/taiwan-generated-news/taiwan-news-final.html",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#f6f6f6",
   "theme_color": "#ff4200",
