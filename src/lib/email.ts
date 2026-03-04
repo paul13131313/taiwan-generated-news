@@ -30,15 +30,18 @@ export async function sendNewsletter(
     const batch = subscribers.slice(i, i + 50);
 
     try {
-      await resend.batch.send(
+      const fromAddress = "台灣生成新聞 <news@seiseishinbun.com>";
+      const result = await resend.batch.send(
         batch.map((to) => ({
-          from: "台灣生成新聞 <news@wewewetw.jp>",
+          from: fromAddress,
           to,
           subject,
           html,
           text,
         }))
       );
+      console.log("[email] Resend response:", JSON.stringify(result));
+      console.log("[email] Sending to:", batch.join(", "), "from:", fromAddress);
       success += batch.length;
     } catch (e) {
       console.error("Batch send failed:", e);
@@ -57,13 +60,16 @@ export async function sendTestEmail(
   const issueUrl = `${BASE_URL}/issues/${issueDate}`;
   const { html, text } = buildTeaserEmail(data, issueUrl);
 
-  await resend.emails.send({
-    from: "台灣生成新聞 <news@wewewetw.jp>",
+  const fromAddress = "台灣生成新聞 <news@seiseishinbun.com>";
+  console.log("[email] Sending to:", to, "from:", fromAddress);
+  const result = await resend.emails.send({
+    from: fromAddress,
     to,
     subject: `[TEST] 台灣生成新聞 ${data.issueNumber} — ${data.date}`,
     html,
     text,
   });
+  console.log("[email] Resend response:", JSON.stringify(result));
 }
 
 function buildTeaserEmail(
