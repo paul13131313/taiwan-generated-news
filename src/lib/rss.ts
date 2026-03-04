@@ -121,6 +121,13 @@ const TAIWAN_FEEDS: FeedSource[] = [
     lang: "en",
     filter: (title) => /taiwan|taipei|tsmc|foxconn|taiex/i.test(title),
   },
+  // === プレスリリース系 ===
+  {
+    name: "台灣新聞聯播網",
+    url: "https://www.twnnews.com/feed",
+    category: "経済",
+    lang: "zh",
+  },
   // === 台湾トレンド・ライフスタイル ===
   {
     name: "PTT Hot",
@@ -134,6 +141,12 @@ const TAIWAN_FEEDS: FeedSource[] = [
     category: "テクノロジー",
     lang: "zh",
   },
+  {
+    name: "ETtoday 旅遊雲",
+    url: "https://feeds.feedburner.com/ettoday/travel",
+    category: "トレンド",
+    lang: "zh",
+  },
   // === 台湾政府系 ===
   {
     name: "Taiwan Today",
@@ -143,7 +156,7 @@ const TAIWAN_FEEDS: FeedSource[] = [
   },
 ];
 
-const MAX_PER_SOURCE = 3;
+const MAX_PER_SOURCE = 2;
 const HOURS_24 = 24 * 60 * 60 * 1000;
 
 export async function fetchAllFeeds(): Promise<RSSArticle[]> {
