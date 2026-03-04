@@ -392,7 +392,7 @@ ${data.japanEntry.caseStudy && data.japanEntry.caseStudy.title !== "本日の該
   : (!data.japanEntry.isStock ? `<p style="font-size: 0.82rem; color: #888; margin: 16px 0;">本日の該当事例はありません。</p>` : "")}
 
 ${data.culture.featured && data.culture.featured.length > 0 ? `
-${renderSection("Culture", "台湾カルチャー")}
+${renderSection("Trending Now", "台湾トレンド")}
 
 <div class="hl-grid">
   ${data.culture.featured.slice(0, 2).map((a) => renderHlCol(a)).join("")}

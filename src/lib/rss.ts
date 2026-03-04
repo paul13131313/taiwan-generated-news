@@ -121,6 +121,19 @@ const TAIWAN_FEEDS: FeedSource[] = [
     lang: "en",
     filter: (title) => /taiwan|taipei|tsmc|foxconn|taiex/i.test(title),
   },
+  // === 台湾トレンド・ライフスタイル ===
+  {
+    name: "PTT Hot",
+    url: "https://www.ptt.cc/atom/hot-topic.xml",
+    category: "トレンド",
+    lang: "zh",
+  },
+  {
+    name: "INSIDE",
+    url: "https://www.inside.com.tw/feed",
+    category: "テクノロジー",
+    lang: "zh",
+  },
   // === 台湾政府系 ===
   {
     name: "Taiwan Today",
