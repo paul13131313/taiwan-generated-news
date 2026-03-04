@@ -50,6 +50,31 @@ const TAIWAN_FEEDS: FeedSource[] = [
     category: "テクノロジー",
     lang: "zh",
   },
+  // === 台湾ビジネス特化メディア ===
+  {
+    name: "工商時報",
+    url: "https://ctee.com.tw/feed",
+    category: "経済",
+    lang: "zh",
+  },
+  {
+    name: "經濟日報",
+    url: "https://money.udn.com/rssfeed/news/1001/5591",
+    category: "経済",
+    lang: "zh",
+  },
+  {
+    name: "商業周刊",
+    url: "https://www.businessweekly.com.tw/rss/blog",
+    category: "経済",
+    lang: "zh",
+  },
+  {
+    name: "DIGITIMES",
+    url: "https://www.digitimes.com/rss/rss.asp",
+    category: "テクノロジー",
+    lang: "en",
+  },
   // === 台湾メディア（中国語） ===
   {
     name: "自由時報",

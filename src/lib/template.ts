@@ -284,7 +284,7 @@ export function generateNewsHTML(data: TaiwanNewsData): string {
   const listArticles = allHeadlines.slice(2);
 
   // Limit columns and case studies to 1
-  const businessArticle = data.business.articles.slice(0, 1);
+  const businessArticle = data.business.articles.slice(0, 3);
   const cultureArticles = data.culture.articles.slice(0, 1);
   const lifeArticles = data.lifeInTaiwan.articles.slice(0, 1);
   const japanEntryArticles = data.japanEntry.articles.slice(0, 1);
