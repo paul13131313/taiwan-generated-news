@@ -126,7 +126,9 @@ export const stockArticles: StockArticle[] = [
  * 同じ日は同じ記事、翌日は別の記事を返す。
  */
 export function pickStockArticles(count: number = 2): EntryCard[] {
-  const today = new Date();
+  const now = new Date();
+  const taiwanOffset = 8 * 60;
+  const today = new Date(now.getTime() + (taiwanOffset + now.getTimezoneOffset()) * 60000);
   const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
 
   // シンプルなハッシュで開始インデックスを決定

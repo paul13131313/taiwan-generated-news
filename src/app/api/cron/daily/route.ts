@@ -33,14 +33,24 @@ export async function GET(request: Request) {
       },
     });
 
-    console.log("[cron] Starting generation...");
     const genResult = await genRes.json();
+    console.log("[cron] Generation result:", JSON.stringify(genResult));
 
     if (!genRes.ok) {
       return NextResponse.json(
         { error: "Generation failed", detail: genResult },
         { status: 500 }
       );
+    }
+
+    // 生成がスキップされた場合はメール配信しない
+    if (genResult.skipped) {
+      console.log("[cron] Generation skipped (already exists), not sending newsletter");
+      return NextResponse.json({
+        success: true,
+        generation: genResult,
+        newsletter: { skipped: true, reason: "No new issue generated" },
+      });
     }
 
     // Step 2: Send newsletter

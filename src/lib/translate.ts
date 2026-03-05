@@ -117,9 +117,11 @@ export async function generateNewspaper(
   weather: { taipei: WeatherData; kaohsiung: WeatherData },
   issueNumber: number
 ): Promise<TaiwanNewsData> {
-  const today = new Date();
-  const dateStr = formatJapaneseDate(today);
-  const dayOfWeek = ["日", "月", "火", "水", "木", "金", "土"][today.getDay()];
+  const now = new Date();
+  const taiwanOffset = 8 * 60;
+  const taiwanTime = new Date(now.getTime() + (taiwanOffset + now.getTimezoneOffset()) * 60000);
+  const dateStr = formatJapaneseDate(taiwanTime);
+  const dayOfWeek = ["日", "月", "火", "水", "木", "金", "土"][taiwanTime.getDay()];
 
   const articleList = articles
     .map(

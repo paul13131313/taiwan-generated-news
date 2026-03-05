@@ -1,4 +1,5 @@
 import { put } from "@vercel/blob";
+import { getTaiwanToday } from "./redis";
 
 const BRIGHTNESS_THRESHOLD = 50;
 const MAX_RETRIES = 3;
@@ -125,7 +126,7 @@ export async function generateHeroImage(prompt: string): Promise<string | null> 
       }
 
       // Upload to Vercel Blob
-      const dateStr = new Date().toISOString().split("T")[0];
+      const dateStr = getTaiwanToday();
       console.log(`[image] Uploading to Vercel Blob...`);
       const blob = await put(
         `hero-${dateStr}-${attempt}.png`,

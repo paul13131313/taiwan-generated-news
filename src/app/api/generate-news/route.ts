@@ -4,7 +4,7 @@ import { fetchMarketAndWeather } from "@/lib/stock";
 import { generateNewspaper } from "@/lib/translate";
 import { generateHeroImage } from "@/lib/image";
 import { generateNewsHTML } from "@/lib/template";
-import { storeIssue, incrementIssueCounter, issueExists } from "@/lib/redis";
+import { storeIssue, incrementIssueCounter, issueExists, getTaiwanToday } from "@/lib/redis";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -22,14 +22,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const today = new Date().toISOString().split("T")[0];
+    const today = getTaiwanToday();
+    console.log(`[generate] Taiwan date: ${today}`);
 
     // Check for duplicate generation
     const forceParam = new URL(request.url).searchParams.get("force");
     if (!forceParam && await issueExists(today)) {
+      console.log(`[generate] Issue already exists for ${today}, skipping`);
       return NextResponse.json({
         message: "Issue already exists for today",
         date: today,
+        skipped: true,
       });
     }
 

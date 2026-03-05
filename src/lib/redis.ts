@@ -1,5 +1,16 @@
 import { Redis } from "@upstash/redis";
 
+// 台湾時間（UTC+8）の今日の日付を返す
+export function getTaiwanToday(): string {
+  const now = new Date();
+  const taiwanOffset = 8 * 60; // UTC+8 in minutes
+  const taiwanTime = new Date(now.getTime() + (taiwanOffset + now.getTimezoneOffset()) * 60000);
+  const y = taiwanTime.getFullYear();
+  const m = String(taiwanTime.getMonth() + 1).padStart(2, "0");
+  const d = String(taiwanTime.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
 function createRedis(): Redis | null {
   const url = process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.UPSTASH_REDIS_REST_TOKEN;
