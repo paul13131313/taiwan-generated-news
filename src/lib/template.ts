@@ -30,9 +30,10 @@ body {
 .newspaper { max-width: 680px; margin: 0 auto; background: var(--white); }
 
 /* ===== Header ===== */
-.header { padding: 28px 28px 10px; text-align: center; }
-.header-issue { display: flex; justify-content: center; gap: 16px; font-size: 0.75rem; color: var(--gray); padding-bottom: 12px; border-bottom: 3px double var(--black); }
-.header-title { font-size: 2.4rem; font-weight: 900; letter-spacing: 0.14em; color: var(--black); line-height: 1.3; margin-top: 14px; }
+.header { padding: 12px 28px 10px; text-align: center; }
+.header-issue { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--mono); font-size: 0.7rem; color: var(--gray); letter-spacing: 0.04em; }
+.header-rule { border: none; border-top: 1px solid var(--black); margin: 4px 0 0; }
+.header-title { font-size: 2.4rem; font-weight: 900; letter-spacing: 0.14em; color: var(--black); line-height: 1.3; margin-top: 18px; }
 .header-sub { margin-top: 6px; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
 .header-market { display: flex; justify-content: center; gap: 40px; margin-top: 12px; }
 .header-market .market-card { text-align: center; }
@@ -91,6 +92,19 @@ body {
 .japan-article h3 { font-size: 1.05rem; font-weight: 800; line-height: 1.5; }
 .japan-article .body { font-size: 0.92rem; line-height: 1.85; color: #444; margin-top: 8px; }
 
+/* ===== 台湾文化史 — コラム風デザイン ===== */
+.culture-history { margin-top: 12px; padding: 24px 28px; background: #1a1a1a; color: #e8e8e8; border-radius: 4px; }
+.culture-history h3 { font-size: 1.1rem; font-weight: 800; line-height: 1.5; color: #fff; }
+.culture-history .body { font-size: 0.9rem; line-height: 2; color: #ccc; margin-top: 10px; }
+.culture-history .source-via { color: #888; }
+.culture-history .source-via a { color: #aaa; }
+.culture-history .source-via a:hover { color: var(--accent); }
+.culture-history .glossary-box { background: rgba(255,255,255,0.08); }
+.culture-history .glossary-box .gl-label { color: var(--accent); }
+.culture-history .glossary-box dt { color: #ddd; }
+.culture-history .glossary-box dt .gl-reading { color: #999; }
+.culture-history .glossary-box dd { color: #bbb; }
+
 /* ===== 通常記事（フル幅） ===== */
 .article { padding: 20px 0; border-bottom: 1px solid var(--line); }
 .article:last-child { border-bottom: none; }
@@ -141,7 +155,7 @@ body {
 @media (max-width: 600px) {
   body { background: var(--white); font-size: 16px; }
   .newspaper { box-shadow: none; }
-  .header { padding: 28px 20px 24px; }
+  .header { padding: 10px 20px 10px; }
   .header-title { font-size: 1.8rem; }
   .content { padding: 0 20px; }
   .hero h2 { font-size: 1.3rem; }
@@ -228,6 +242,17 @@ function renderBuzzCard(item: BuzzItem): string {
     </div>`;
 }
 
+// 台湾文化史 — ダークコラム風
+function renderCultureHistory(article: Article): string {
+  return `
+    <div class="culture-history">
+      <h3>${esc(article.title)}</h3>
+      <div class="body">${esc(article.body)}</div>
+      ${renderViaLink(article.sourceUrl, article.sourceName)}
+      ${renderGlossary(article.glossary)}
+    </div>`;
+}
+
 // 台湾人が見ている日本 — 引用風
 function renderJapanArticle(article: Article): string {
   return `
@@ -263,6 +288,7 @@ export function generateNewsHTML(data: TaiwanNewsData): string {
   const hasBeauty = data.beautyBrand.articles.length > 0;
   const hasBuzz = data.snsBuzz.items.length > 0;
   const hasJapan = data.taiwanLooksAtJapan.articles.length > 0;
+  const hasCultureHistory = (data.taiwanCultureHistory?.articles?.length ?? 0) > 0;
 
   // カフェ＆ビューティーを2段組で並べる（両方ある場合）
   const hasTwoCol = hasCafe && hasBeauty;
@@ -304,6 +330,11 @@ ${renderGlossary(data.snsBuzz.glossary)}` : "";
 ${renderSectionHeader("Taiwan Looks at Japan", "台湾人が見ている日本")}
 ${data.taiwanLooksAtJapan.articles.map((a) => renderJapanArticle(a)).join("")}` : "";
 
+  const cultureHistorySection = hasCultureHistory ? `
+<hr class="divider-bold">
+${renderSectionHeader("Taiwan Culture History", "台湾文化史")}
+${data.taiwanCultureHistory!.articles.map((a) => renderCultureHistory(a)).join("")}` : "";
+
   return `<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -332,6 +363,7 @@ ${ogImage ? `<meta name="twitter:image" content="${esc(ogImage)}">` : ""}
     <span>${esc(data.issueNumber)}</span>
     <span>${esc(data.date)}</span>
   </div>
+  <hr class="header-rule">
   <h1 class="header-title">台灣生成新聞</h1>
   <div class="header-sub">Taiwan Trend Curation</div>
   ${hasMarketInfo ? `<div class="header-market">${taiexCard}${weatherCard}</div>` : ""}
@@ -367,6 +399,9 @@ ${buzzSection}
 
 <!-- ⑤ 台湾人が見ている日本（引用風） -->
 ${japanSection}
+
+<!-- ⑥ 台湾文化史（ダークコラム） -->
+${cultureHistorySection}
 
 <div class="disclaimer">
   本サイトは各報道機関・メディアの公開記事を参考に、AIがキュレーション・要約したものです。正確性については原典をご確認ください。記事の著作権は各報道機関に帰属します。

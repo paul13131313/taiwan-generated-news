@@ -145,6 +145,17 @@ ${articleList}
       }
     ]
   },
+  "taiwanCultureHistory": {
+    "articles": [
+      {
+        "title": "見出し（日本語。キャッチーに）",
+        "body": "解説文（200〜300字。台湾発の文化・カルチャー・エンタメが世界でどう受容されたかを解説。歴史的背景や意外なエピソードを含める）",
+        "glossary": [
+          { "term": "用語", "reading": "カタカナ読み（任意）", "explanation": "簡潔な説明" }
+        ]
+      }
+    ]
+  },
   "imagePrompt": "Hero image prompt in English, 40 words max. Vibrant, well-lit, Taiwan lifestyle/culture scene. Describe a concrete visual based on the todayTrend article (e.g., trendy cafe interior, night market scene, cosmetics display). No text overlay."
 }
 
@@ -152,8 +163,9 @@ ${articleList}
 - todayTrend: 1本（その日最も面白いトレンド）
 - cafeGourmet.articles: 2〜3本
 - beautyBrand.articles: 2〜3本
-- snsBuzz.items: 3〜5本
+- snsBuzz.items: 必ず4本（十字グリッド表示のため厳守）
 - taiwanLooksAtJapan.articles: 1〜2本
+- taiwanCultureHistory.articles: 1本
 - 同じ記事・同じトピックを複数のコーナーで使うことは禁止
 
 ## todayTrend 選定基準
@@ -177,15 +189,28 @@ ${articleList}
 - 台湾人に人気の日本旅行先、台湾で話題の日本の商品・コンテンツ
 - 日本文化に対する台湾人の反応、台湾人が意外に思う日本の習慣
 
+## taiwanCultureHistory テーマ例（重要：RSSに依存しないコーナー）
+- このコーナーだけは「今日のRSS記事」に縛られない。あなたの知識で書いてよい
+- 台湾映画が世界で評価された歴史（侯孝賢、蔡明亮、エドワード・ヤン等）
+- 台湾ニューシネマの世界的影響
+- 台湾発の音楽・バンドの海外進出（五月天、S.H.E、ジェイ・チョウ等）
+- 台湾茶文化の世界への広がり（タピオカミルクティーの起源と世界的ブーム）
+- 台湾デザインの国際的評価（金點設計獎、台湾デザインセンター等）
+- 台湾文学の海外翻訳・受賞歴（呉明益等）
+- 台湾ゲーム産業の歴史（返校、Detention等）
+- 台湾のストリートカルチャー（夜市文化、屋台文化の世界遺産的価値）
+- 毎回異なるテーマを選ぶこと。読者が「へー、知らなかった」と思う内容を
+
 ## 重要（厳守）
-- RSS記事にない情報は使わない
+- taiwanCultureHistory以外のコーナーはRSS記事にない情報は使わない
 - glossaryは該当がなければ空配列[]
 - 記事本文中には括弧注を入れない。固有名詞はそのまま記載し、解説はglossaryにまとめる
 - sourceUrlはRSS記事一覧にあるURLをそのまま使うこと
 - sourceNameはRSS記事一覧の[カテゴリ/ソース名]のソース名をそのまま使うこと
 - 全てのコーナーに必ず1本以上の記事を入れること。空配列は絶対にNG
 - cafeGourmetとbeautyBrandは特に重要。RSSに直接該当する記事がなくても、関連性のある記事を柔軟に割り当てること
-- 例: デザイン系の記事はbeautyBrandに、ライフスタイル系はcafeGourmetに割り当て可能`;
+- 例: デザイン系の記事はbeautyBrandに、ライフスタイル系はcafeGourmetに割り当て可能
+- taiwanCultureHistoryはRSSに依存しない。あなたの知識で台湾文化史の解説記事を書く`;
 
   const response = await client.messages.create({
     model: "claude-haiku-4-5-20251001",

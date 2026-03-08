@@ -74,6 +74,11 @@ export interface TaiwanNewsData {
     articles: Article[];
   };
 
+  // ⑥ 台湾文化史（RSS非依存、AI知識ベース）
+  taiwanCultureHistory?: {
+    articles: Article[];
+  };
+
   // ヒーロー画像用プロンプト（FLUX生成）
   imagePrompt: string;
   heroImageUrl?: string;
