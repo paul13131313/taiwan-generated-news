@@ -30,11 +30,11 @@ body {
 .newspaper { max-width: 680px; margin: 0 auto; background: var(--white); }
 
 /* ===== Header ===== */
-.header { padding: 44px 28px 20px; text-align: center; }
-.header-title { font-size: 2.4rem; font-weight: 900; letter-spacing: 0.14em; color: var(--black); line-height: 1.3; }
+.header { padding: 28px 28px 10px; text-align: center; }
+.header-issue { display: flex; justify-content: center; gap: 16px; font-size: 0.75rem; color: var(--gray); padding-bottom: 12px; border-bottom: 3px double var(--black); }
+.header-title { font-size: 2.4rem; font-weight: 900; letter-spacing: 0.14em; color: var(--black); line-height: 1.3; margin-top: 14px; }
 .header-sub { margin-top: 6px; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
-.header-issue { display: flex; justify-content: center; gap: 16px; margin-top: 18px; font-size: 0.75rem; color: var(--gray); }
-.header-market { display: flex; justify-content: center; gap: 40px; margin-top: 14px; }
+.header-market { display: flex; justify-content: center; gap: 40px; margin-top: 12px; }
 .header-market .market-card { text-align: center; }
 .header-market .market-label { font-family: var(--mono); font-size: 0.55rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-light); }
 .header-market .market-value { font-family: var(--mono); font-size: 0.85rem; font-weight: 700; color: var(--gray); margin-top: 3px; letter-spacing: 0.02em; }
@@ -44,6 +44,7 @@ body {
 
 /* ===== Section Header ===== */
 .sec-header { margin: 48px 0 16px; padding-bottom: 10px; border-bottom: 2px solid var(--black); }
+.sec-header:first-child { margin-top: 16px; }
 .sec-header .sec-en { font-family: var(--mono); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
 .sec-header .sec-jp { font-size: 1.1rem; font-weight: 900; margin-top: 2px; }
 
@@ -327,12 +328,12 @@ ${ogImage ? `<meta name="twitter:image" content="${esc(ogImage)}">` : ""}
 <div class="newspaper">
 
 <header class="header">
-  <h1 class="header-title">台灣生成新聞</h1>
-  <div class="header-sub">Taiwan Trend Curation</div>
   <div class="header-issue">
     <span>${esc(data.issueNumber)}</span>
     <span>${esc(data.date)}</span>
   </div>
+  <h1 class="header-title">台灣生成新聞</h1>
+  <div class="header-sub">Taiwan Trend Curation</div>
   ${hasMarketInfo ? `<div class="header-market">${taiexCard}${weatherCard}</div>` : ""}
 </header>
 
