@@ -29,13 +29,15 @@ body {
 }
 .newspaper { max-width: 680px; margin: 0 auto; background: var(--white); }
 
-/* ===== Header — 修正1: タイトルを目立たせる ===== */
-.header { padding: 40px 28px 28px; text-align: center; border-bottom: 3px double var(--black); }
+/* ===== Header ===== */
+.header { padding: 40px 28px 32px; text-align: center; }
 .header-title { font-size: 2.4rem; font-weight: 900; letter-spacing: 0.14em; color: var(--black); line-height: 1.3; }
 .header-sub { margin-top: 6px; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
 .header-issue { display: flex; justify-content: center; gap: 16px; margin-top: 16px; font-size: 0.75rem; color: var(--gray); }
-.header-market { display: flex; justify-content: center; gap: 24px; margin-top: 8px; font-size: 0.72rem; color: var(--gray-light); }
-.header-market .taiex { font-family: var(--mono); font-weight: 600; letter-spacing: 0.02em; }
+.header-market { display: flex; justify-content: center; gap: 32px; margin-top: 20px; }
+.header-market .market-card { text-align: center; }
+.header-market .market-label { font-family: var(--mono); font-size: 0.55rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-light); }
+.header-market .market-value { font-family: var(--mono); font-size: 0.85rem; font-weight: 700; color: var(--gray); margin-top: 2px; letter-spacing: 0.02em; }
 
 /* Content */
 .content { padding: 0 28px; }
@@ -187,14 +189,14 @@ export function generateNewsHTML(data: TaiwanNewsData): string {
 
   const ogImage = data.heroImageUrl || "";
 
-  // 修正1: ヘッダーのTAIEX・天気を別行に
+  // ヘッダーのTAIEX・天気をカード型で表示
   const headerInfo = data.headerInfo;
   const hasMarketInfo = headerInfo?.taiex || headerInfo?.weather;
-  const taiexHtml = headerInfo?.taiex
-    ? `<span class="taiex">TAIEX ${esc(headerInfo.taiex)}</span>`
+  const taiexCard = headerInfo?.taiex
+    ? `<div class="market-card"><div class="market-label">TAIEX</div><div class="market-value">${esc(headerInfo.taiex)}</div></div>`
     : "";
-  const weatherHtml = headerInfo?.weather
-    ? `<span>台北 ${esc(headerInfo.weather)}</span>`
+  const weatherCard = headerInfo?.weather
+    ? `<div class="market-card"><div class="market-label">台北</div><div class="market-value">${esc(headerInfo.weather)}</div></div>`
     : "";
 
   // 修正2: 空コーナーは非表示
@@ -255,7 +257,7 @@ ${ogImage ? `<meta name="twitter:image" content="${esc(ogImage)}">` : ""}
     <span>${esc(data.issueNumber)}</span>
     <span>${esc(data.date)}</span>
   </div>
-  ${hasMarketInfo ? `<div class="header-market">${taiexHtml}${weatherHtml}</div>` : ""}
+  ${hasMarketInfo ? `<div class="header-market">${taiexCard}${weatherCard}</div>` : ""}
 </header>
 
 <main class="content">
