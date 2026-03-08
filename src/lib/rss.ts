@@ -61,6 +61,19 @@ const TAIWAN_FEEDS: FeedSource[] = [
     category: "テクノロジー",
     tier: "sub",
   },
+  // サブ（追加）
+  {
+    name: "自由時報 生活",
+    url: "https://news.ltn.com.tw/rss/life.xml",
+    category: "生活",
+    tier: "sub",
+  },
+  {
+    name: "自由時報 娛樂",
+    url: "https://news.ltn.com.tw/rss/entertainment.xml",
+    category: "エンタメ",
+    tier: "sub",
+  },
   // 参考
   {
     name: "Business Next",
@@ -72,6 +85,12 @@ const TAIWAN_FEEDS: FeedSource[] = [
     name: "The News Lens",
     url: "https://feeds.feedburner.com/TheNewsLens",
     category: "総合",
+    tier: "ref",
+  },
+  {
+    name: "天下雑誌",
+    url: "https://www.cw.com.tw/RSS/cw_content.xml",
+    category: "ライフスタイル",
     tier: "ref",
   },
 ];
@@ -183,8 +202,8 @@ export async function fetchAllFeeds(): Promise<RSSArticle[]> {
     return true;
   });
 
-  // Take top 40 articles (more input for AI selection)
-  const final = unique.slice(0, 40);
+  // Take top 50 articles (more input for AI selection)
+  const final = unique.slice(0, 50);
   console.log(
     `[rss] After dedup: ${unique.length} → returning top ${final.length}`
   );

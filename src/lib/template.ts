@@ -29,19 +29,19 @@ body {
 }
 .newspaper { max-width: 680px; margin: 0 auto; background: var(--white); }
 
-/* Header — 新聞ぽさ */
-.header { padding: 32px 28px 20px; text-align: center; border-bottom: 3px double var(--black); }
-.header-title { font-size: 1.8rem; font-weight: 900; letter-spacing: 0.1em; color: var(--black); }
-.header-sub { margin-top: 2px; font-family: var(--mono); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
-.header-meta { display: flex; justify-content: center; gap: 16px; margin-top: 12px; font-size: 0.72rem; color: var(--gray-light); flex-wrap: wrap; }
-.header-meta .meta-item { display: flex; align-items: center; gap: 4px; }
-.header-meta .taiex { font-family: var(--mono); font-weight: 600; color: var(--gray); }
+/* ===== Header — 修正1: タイトルを目立たせる ===== */
+.header { padding: 40px 28px 28px; text-align: center; border-bottom: 3px double var(--black); }
+.header-title { font-size: 2.4rem; font-weight: 900; letter-spacing: 0.14em; color: var(--black); line-height: 1.3; }
+.header-sub { margin-top: 6px; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
+.header-issue { display: flex; justify-content: center; gap: 16px; margin-top: 16px; font-size: 0.75rem; color: var(--gray); }
+.header-market { display: flex; justify-content: center; gap: 24px; margin-top: 8px; font-size: 0.72rem; color: var(--gray-light); }
+.header-market .taiex { font-family: var(--mono); font-weight: 600; letter-spacing: 0.02em; }
 
 /* Content */
 .content { padding: 0 28px; }
 
 /* Section Header */
-.sec-header { margin: 40px 0 16px; padding-bottom: 10px; border-bottom: 2px solid var(--black); }
+.sec-header { margin: 48px 0 16px; padding-bottom: 10px; border-bottom: 2px solid var(--black); }
 .sec-header .sec-en { font-family: var(--mono); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
 .sec-header .sec-jp { font-size: 1.1rem; font-weight: 900; margin-top: 2px; }
 
@@ -56,10 +56,10 @@ body {
 .hero .lead { font-size: 1rem; line-height: 1.9; color: #444; margin-top: 8px; font-weight: 500; }
 .hero .body { font-size: 1rem; line-height: 2; color: #333; margin-top: 12px; }
 
-/* Source Link — 元記事リンク */
-.source-link { display: inline-flex; align-items: center; gap: 4px; margin-top: 12px; font-size: 0.82rem; font-weight: 600; color: var(--accent); text-decoration: none; }
-.source-link:hover { text-decoration: underline; }
-.source-link::before { content: '〉'; }
+/* Source Link — 修正4: via 媒体名 */
+.source-via { margin-top: 10px; font-size: 0.75rem; color: var(--gray-light); }
+.source-via a { color: var(--gray); text-decoration: none; font-weight: 500; }
+.source-via a:hover { color: var(--accent); text-decoration: underline; }
 
 /* Article — 中サイズ */
 .article { padding: 20px 0; border-bottom: 1px solid var(--line); }
@@ -110,7 +110,8 @@ body {
 @media (max-width: 600px) {
   body { background: var(--white); font-size: 16px; }
   .newspaper { box-shadow: none; }
-  .header { padding: 24px 20px 16px; }
+  .header { padding: 28px 20px 22px; }
+  .header-title { font-size: 1.8rem; }
   .content { padding: 0 20px; }
   .hero h2 { font-size: 1.3rem; }
 }
@@ -147,9 +148,11 @@ function renderGlossary(items?: GlossaryItem[]): string {
     </div>`;
 }
 
-function renderSourceLink(url?: string): string {
+// 修正4: 「元記事を読む」→「via 媒体名」リンク
+function renderViaLink(url?: string, name?: string): string {
   if (!url) return "";
-  return `<a class="source-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">元記事を読む</a>`;
+  const label = name || "Source";
+  return `<div class="source-via">via <a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a></div>`;
 }
 
 function renderSectionHeader(en: string, jp: string): string {
@@ -161,7 +164,7 @@ function renderArticle(article: Article): string {
     <div class="article">
       <h3>${esc(article.title)}</h3>
       <div class="body">${esc(article.body)}</div>
-      ${renderSourceLink(article.sourceUrl)}
+      ${renderViaLink(article.sourceUrl, article.sourceName)}
       ${renderGlossary(article.glossary)}
     </div>`;
 }
@@ -171,7 +174,7 @@ function renderBuzzItem(item: BuzzItem): string {
     <div class="buzz-item">
       <h4>${esc(item.title)}</h4>
       <p>${esc(item.description)}</p>
-      ${renderSourceLink(item.sourceUrl)}
+      ${renderViaLink(item.sourceUrl, item.sourceName)}
     </div>`;
 }
 
@@ -184,14 +187,43 @@ export function generateNewsHTML(data: TaiwanNewsData): string {
 
   const ogImage = data.heroImageUrl || "";
 
-  // ヘッダーのTAIEX・天気
+  // 修正1: ヘッダーのTAIEX・天気を別行に
   const headerInfo = data.headerInfo;
+  const hasMarketInfo = headerInfo?.taiex || headerInfo?.weather;
   const taiexHtml = headerInfo?.taiex
-    ? `<span class="meta-item"><span class="taiex">TAIEX ${esc(headerInfo.taiex)}</span></span>`
+    ? `<span class="taiex">TAIEX ${esc(headerInfo.taiex)}</span>`
     : "";
   const weatherHtml = headerInfo?.weather
-    ? `<span class="meta-item">台北 ${esc(headerInfo.weather)}</span>`
+    ? `<span>台北 ${esc(headerInfo.weather)}</span>`
     : "";
+
+  // 修正2: 空コーナーは非表示
+  const hasCafe = data.cafeGourmet.articles.length > 0;
+  const hasBeauty = data.beautyBrand.articles.length > 0;
+  const hasBuzz = data.snsBuzz.items.length > 0;
+  const hasJapan = data.taiwanLooksAtJapan.articles.length > 0;
+
+  // 修正3: コーナー名から「台湾」を削除
+  const cafeSection = hasCafe ? `
+<hr class="divider">
+${renderSectionHeader("Cafe & Gourmet", "カフェ＆グルメ")}
+${data.cafeGourmet.articles.map((a) => renderArticle(a)).join("")}` : "";
+
+  const beautySection = hasBeauty ? `
+<hr class="divider">
+${renderSectionHeader("Beauty & Brand", "ビューティー＆ブランド")}
+${data.beautyBrand.articles.map((a) => renderArticle(a)).join("")}` : "";
+
+  const buzzSection = hasBuzz ? `
+<hr class="divider">
+${renderSectionHeader("SNS Buzz", "SNSバズ")}
+${data.snsBuzz.items.map((item) => renderBuzzItem(item)).join("")}
+${renderGlossary(data.snsBuzz.glossary)}` : "";
+
+  const japanSection = hasJapan ? `
+<hr class="divider">
+${renderSectionHeader("Taiwan Looks at Japan", "台湾人が見ている日本")}
+${data.taiwanLooksAtJapan.articles.map((a) => renderArticle(a)).join("")}` : "";
 
   return `<!DOCTYPE html>
 <html lang="ja">
@@ -219,18 +251,17 @@ ${ogImage ? `<meta name="twitter:image" content="${esc(ogImage)}">` : ""}
 <header class="header">
   <h1 class="header-title">台灣生成新聞</h1>
   <div class="header-sub">Taiwan Trend Curation</div>
-  <div class="header-meta">
-    <span class="meta-item">${esc(data.issueNumber)}</span>
-    <span class="meta-item">${esc(data.date)}</span>
-    ${taiexHtml}
-    ${weatherHtml}
+  <div class="header-issue">
+    <span>${esc(data.issueNumber)}</span>
+    <span>${esc(data.date)}</span>
   </div>
+  ${hasMarketInfo ? `<div class="header-market">${taiexHtml}${weatherHtml}</div>` : ""}
 </header>
 
 <main class="content">
 
-<!-- ① 今日の台湾トレンド -->
-${renderSectionHeader("Today's Trend", "今日の台湾トレンド")}
+<!-- ① 今日のトレンド -->
+${renderSectionHeader("Today's Trend", "今日のトレンド")}
 
 <article class="hero">
   <div class="hero-img">
@@ -240,38 +271,14 @@ ${renderSectionHeader("Today's Trend", "今日の台湾トレンド")}
   <h2>${esc(data.todayTrend.title)}</h2>
   <div class="lead">${esc(data.todayTrend.lead)}</div>
   <div class="body">${esc(data.todayTrend.body)}</div>
-  ${renderSourceLink(data.todayTrend.sourceUrl)}
+  ${renderViaLink(data.todayTrend.sourceUrl, data.todayTrend.sourceName)}
   ${renderGlossary(data.todayTrend.glossary)}
 </article>
 
-<hr class="divider">
-
-<!-- ② 台湾カフェ＆グルメ -->
-${renderSectionHeader("Cafe & Gourmet", "台湾カフェ＆グルメ")}
-
-${data.cafeGourmet.articles.map((a) => renderArticle(a)).join("")}
-
-<hr class="divider">
-
-<!-- ③ 台湾ビューティー＆ブランド -->
-${renderSectionHeader("Beauty & Brand", "台湾ビューティー＆ブランド")}
-
-${data.beautyBrand.articles.map((a) => renderArticle(a)).join("")}
-
-<hr class="divider">
-
-<!-- ④ 台湾SNSバズ -->
-${renderSectionHeader("SNS Buzz", "台湾SNSバズ")}
-
-${data.snsBuzz.items.map((item) => renderBuzzItem(item)).join("")}
-${renderGlossary(data.snsBuzz.glossary)}
-
-<hr class="divider">
-
-<!-- ⑤ 台湾人が見ている日本 -->
-${renderSectionHeader("Taiwan Looks at Japan", "台湾人が見ている日本")}
-
-${data.taiwanLooksAtJapan.articles.map((a) => renderArticle(a)).join("")}
+${cafeSection}
+${beautySection}
+${buzzSection}
+${japanSection}
 
 <div class="disclaimer">
   本サイトは各報道機関・メディアの公開記事を参考に、AIがキュレーション・要約したものです。正確性については原典をご確認ください。記事の著作権は各報道機関に帰属します。

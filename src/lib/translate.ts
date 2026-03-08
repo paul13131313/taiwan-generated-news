@@ -51,7 +51,8 @@ const SYSTEM_PROMPT = `あなたは「台湾トレンド新聞」の編集者で
 - RSS記事に含まれる事実のみ使用。捏造厳禁
 - JSONのみ出力。マークダウンのコードブロックは使わない
 - 画像生成プロンプトは英語で、台湾カルチャーの雰囲気が伝わるスタイル指示を含める
-- sourceUrlはRSS記事のURLをそのまま使用する`;
+- sourceUrlはRSS記事のURLをそのまま使用する
+- sourceNameはRSS記事一覧の[カテゴリ/ソース名]のソース名をそのまま使用する（例: "PopDaily", "niusnews", "Shopping Design"）`;
 
 export async function generateNewspaper(
   articles: RSSArticle[],
@@ -87,6 +88,7 @@ ${articleList}
     "lead": "リード文（2〜3文、読者の興味を引くフックから入る）",
     "body": "紹介文（200〜300字。トップ記事のみ少し長めでよい。なぜ今話題なのか、日本人にとってのポイントを伝える）",
     "sourceUrl": "元記事のURL（RSS一覧のURLをそのまま使用）",
+    "sourceName": "メディア名（例: PopDaily）",
     "glossary": [
       { "term": "用語", "reading": "カタカナ読み（任意）", "explanation": "簡潔な説明" }
     ]
@@ -97,6 +99,7 @@ ${articleList}
         "title": "見出し（日本語）",
         "body": "紹介文（100〜200字。なぜこの記事が面白いか、日本人へのポイント）",
         "sourceUrl": "元記事のURL",
+        "sourceName": "メディア名",
         "glossary": [
           { "term": "用語", "reading": "カタカナ読み（任意）", "explanation": "簡潔な説明" }
         ]
@@ -109,6 +112,7 @@ ${articleList}
         "title": "見出し（日本語）",
         "body": "紹介文（100〜200字）",
         "sourceUrl": "元記事のURL",
+        "sourceName": "メディア名",
         "glossary": [
           { "term": "用語", "reading": "カタカナ読み（任意）", "explanation": "簡潔な説明" }
         ]
@@ -120,7 +124,8 @@ ${articleList}
       {
         "title": "見出し（日本語）",
         "description": "1〜2文の解説（50〜100字）",
-        "sourceUrl": "関連リンク（あれば）"
+        "sourceUrl": "関連リンク（あれば）",
+        "sourceName": "メディア名（あれば）"
       }
     ],
     "glossary": [
@@ -133,6 +138,7 @@ ${articleList}
         "title": "見出し（日本語）",
         "body": "紹介文（100〜200字。台湾メディアが取り上げた日本関連の記事を台湾人の目線で紹介）",
         "sourceUrl": "元記事のURL",
+        "sourceName": "メディア名",
         "glossary": [
           { "term": "用語", "reading": "カタカナ読み（任意）", "explanation": "簡潔な説明" }
         ]
@@ -171,11 +177,15 @@ ${articleList}
 - 台湾人に人気の日本旅行先、台湾で話題の日本の商品・コンテンツ
 - 日本文化に対する台湾人の反応、台湾人が意外に思う日本の習慣
 
-## 重要
+## 重要（厳守）
 - RSS記事にない情報は使わない
 - glossaryは該当がなければ空配列[]
 - 記事本文中には括弧注を入れない。固有名詞はそのまま記載し、解説はglossaryにまとめる
-- sourceUrlはRSS記事一覧にあるURLをそのまま使うこと`;
+- sourceUrlはRSS記事一覧にあるURLをそのまま使うこと
+- sourceNameはRSS記事一覧の[カテゴリ/ソース名]のソース名をそのまま使うこと
+- 全てのコーナーに必ず1本以上の記事を入れること。空配列は絶対にNG
+- cafeGourmetとbeautyBrandは特に重要。RSSに直接該当する記事がなくても、関連性のある記事を柔軟に割り当てること
+- 例: デザイン系の記事はbeautyBrandに、ライフスタイル系はcafeGourmetに割り当て可能`;
 
   const response = await client.messages.create({
     model: "claude-haiku-4-5-20251001",

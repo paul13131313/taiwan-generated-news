@@ -20,6 +20,7 @@ export interface Article {
   title: string;
   body: string;
   sourceUrl?: string;
+  sourceName?: string;
   glossary?: GlossaryItem[];
 }
 
@@ -28,6 +29,7 @@ export interface BuzzItem {
   title: string;
   description: string;
   sourceUrl?: string;
+  sourceName?: string;
 }
 
 // ===== Newspaper Data Structure =====
@@ -41,12 +43,13 @@ export interface TaiwanNewsData {
     weather?: string;
   };
 
-  // ① 今日の台湾トレンド（トップ）
+  // ① 今日のトレンド（トップ）
   todayTrend: {
     title: string;
     lead: string;
     body: string;
     sourceUrl?: string;
+    sourceName?: string;
     glossary?: GlossaryItem[];
   };
 
