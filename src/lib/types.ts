@@ -8,18 +8,6 @@ export interface RSSArticle {
   publishedAt: string;
 }
 
-// ===== Market / Weather =====
-export interface MarketData {
-  value: string;
-  delta: string;
-  direction: "up" | "dn" | "flat";
-}
-
-export interface WeatherData {
-  temp: number;
-  condition: string;
-}
-
 // ===== Glossary =====
 export interface GlossaryItem {
   term: string;
@@ -27,96 +15,56 @@ export interface GlossaryItem {
   explanation: string;
 }
 
+// ===== Article (共通) =====
+export interface Article {
+  title: string;
+  body: string;
+  glossary?: GlossaryItem[];
+}
+
+// ===== SNS Buzz Item =====
+export interface BuzzItem {
+  title: string;
+  description: string;
+}
+
 // ===== Newspaper Data Structure =====
-export interface SourceLink {
-  name: string;
-  url: string;
-}
-
-export interface HeadlineArticle {
-  category: string;
-  headline: string;
-  excerpt?: string;
-  source: SourceLink;
-  glossary?: GlossaryItem[];
-}
-
-export interface HeroArticle {
-  category: string;
-  headline: string;
-  lead: string;
-  source: SourceLink;
-  glossary?: GlossaryItem[];
-}
-
-export interface MetricCard {
-  value: string;
-  unit: string;
-}
-
-export interface EntryCard {
-  type: "success" | "struggle";
-  brand: string;
-  detail: string;
-  number: string;
-  numberLabel: string;
-  source: SourceLink;
-}
-
-export interface ColumnBox {
-  label: string;
-  title: string;
-  body: string;
-  source?: SourceLink;
-}
-
-export interface CaseStudyBox {
-  label: string;
-  title: string;
-  body: string;
-  source: SourceLink;
-}
-
 export interface TaiwanNewsData {
   date: string;
   issueNumber: string;
-  weather: {
-    taipei: WeatherData;
-    kaohsiung: WeatherData;
+
+  // ① 今日の台湾トレンド（トップ）
+  todayTrend: {
+    title: string;
+    lead: string;
+    body: string;
+    glossary?: GlossaryItem[];
   };
-  stockData: {
-    twdJpy: MarketData;
-    taiex: MarketData;
+
+  // ② 台湾カフェ＆グルメ
+  cafeGourmet: {
+    articles: Article[];
   };
-  hero: HeroArticle;
-  headlines: HeadlineArticle[];
-  trivia: ColumnBox;
-  business: {
-    metrics: MetricCard[];
-    articles: HeadlineArticle[];
-    bizWord: ColumnBox;
+
+  // ③ 台湾ビューティー＆ブランド
+  beautyBrand: {
+    articles: Article[];
   };
-  japanEntry: {
-    metrics: MetricCard[];
-    cards: EntryCard[];
-    articles: HeadlineArticle[];
-    caseStudy: CaseStudyBox;
-    trendWatch: ColumnBox;
-    isStock?: boolean; // ストック記事（過去事例）を使用中かどうか
+
+  // ④ 台湾SNSバズ
+  snsBuzz: {
+    items: BuzzItem[];
+    glossary?: GlossaryItem[];
   };
-  culture: {
-    featured: HeadlineArticle[];
-    articles: HeadlineArticle[];
+
+  // ⑤ 台湾人が見ている日本
+  taiwanLooksAtJapan: {
+    title: string;
+    body: string;
+    glossary?: GlossaryItem[];
   };
-  lifeInTaiwan: {
-    articles: HeadlineArticle[];
-    lifeTip: ColumnBox;
-  };
-  taiwanPhrase?: {
-    phrase: string;
-    pronunciation: string;
-    meaning: string;
-  };
+
+  // ヒーロー画像用プロンプト（FLUX生成）
   imagePrompt: string;
   heroImageUrl?: string;
 }

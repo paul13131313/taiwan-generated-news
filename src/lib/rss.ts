@@ -10,162 +10,126 @@ const parser = new Parser({
   },
 });
 
+type FeedTier = "core" | "sub" | "ref";
+
 interface FeedSource {
   name: string;
   url: string;
   category: string;
-  lang: "zh" | "en" | "ja";
-  filter?: (title: string) => boolean;
+  tier: FeedTier;
 }
 
+// === コア（全記事取得、AIが選別）===
+// === サブ（カルチャー系のみフィルタ）===
+// === 参考（消費財・ブランド系のみ）===
 const TAIWAN_FEEDS: FeedSource[] = [
-  // === 中央通訊社（FeedBurner経由） ===
+  // コア
   {
-    name: "中央通訊社（政治）",
-    url: "https://feeds.feedburner.com/rsscna/politics",
-    category: "政治",
-    lang: "zh",
-  },
-  {
-    name: "中央通訊社（国際）",
-    url: "https://feeds.feedburner.com/rsscna/intworld",
-    category: "国際",
-    lang: "zh",
-  },
-  {
-    name: "中央通訊社（両岸）",
-    url: "https://feeds.feedburner.com/rsscna/mainland",
-    category: "政治",
-    lang: "zh",
-  },
-  {
-    name: "中央通訊社（産経証券）",
-    url: "https://feeds.feedburner.com/rsscna/finance",
-    category: "経済",
-    lang: "zh",
-  },
-  {
-    name: "中央通訊社（科技）",
-    url: "https://feeds.feedburner.com/rsscna/technology",
-    category: "テクノロジー",
-    lang: "zh",
-  },
-  // === 台湾ビジネス特化メディア ===
-  {
-    name: "工商時報",
-    url: "https://ctee.com.tw/feed",
-    category: "経済",
-    lang: "zh",
-  },
-  {
-    name: "經濟日報",
-    url: "https://money.udn.com/rssfeed/news/1001/5591",
-    category: "経済",
-    lang: "zh",
-  },
-  {
-    name: "商業周刊",
-    url: "https://www.businessweekly.com.tw/rss/blog",
-    category: "経済",
-    lang: "zh",
-  },
-  {
-    name: "DIGITIMES",
-    url: "https://www.digitimes.com/rss/rss.asp",
-    category: "テクノロジー",
-    lang: "en",
-  },
-  // === 台湾メディア（中国語） ===
-  {
-    name: "自由時報",
-    url: "https://news.ltn.com.tw/rss/all.xml",
-    category: "総合",
-    lang: "zh",
-  },
-  {
-    name: "NewTalk",
-    url: "https://newtalk.tw/rss/all",
-    category: "総合",
-    lang: "zh",
-  },
-  // === 台湾メディア（英語） ===
-  {
-    name: "Focus Taiwan",
-    url: "https://focustaiwan.tw/rss",
-    category: "総合",
-    lang: "en",
-  },
-  {
-    name: "Taipei Times",
-    url: "https://www.taipeitimes.com/xml/index.rss",
-    category: "政治",
-    lang: "en",
-  },
-  {
-    name: "Taiwan News",
-    url: "https://www.taiwannews.com.tw/en/rss",
-    category: "総合",
-    lang: "en",
-  },
-  // === 日本メディア ===
-  {
-    name: "NHK",
-    url: "https://www.nhk.or.jp/rss/news/cat0.xml",
-    category: "国際",
-    lang: "ja",
-  },
-  {
-    name: "共同通信",
-    url: "https://english.kyodonews.net/rss/all.xml",
-    category: "国際",
-    lang: "en",
-    filter: (title) => /taiwan|taipei|tsmc|foxconn|taiex/i.test(title),
-  },
-  // === プレスリリース系 ===
-  {
-    name: "台灣新聞聯播網",
-    url: "https://www.twnnews.com/feed",
-    category: "経済",
-    lang: "zh",
-  },
-  // === 台湾トレンド・ライフスタイル ===
-  {
-    name: "PTT Hot",
-    url: "https://www.ptt.cc/atom/hot-topic.xml",
+    name: "PopDaily",
+    url: "https://www.popdaily.com.tw/rss",
     category: "トレンド",
-    lang: "zh",
+    tier: "core",
   },
   {
-    name: "INSIDE",
+    name: "niusnews",
+    url: "https://www.niusnews.com/rss",
+    category: "トレンド",
+    tier: "core",
+  },
+  {
+    name: "Shopping Design",
+    url: "https://www.shoppingdesign.com.tw/rss",
+    category: "デザイン",
+    tier: "core",
+  },
+  // サブ
+  {
+    name: "VidaOrange",
+    url: "https://buzzorange.com/vidaorange/feed",
+    category: "ライフスタイル",
+    tier: "sub",
+  },
+  {
+    name: "Inside",
     url: "https://www.inside.com.tw/feed",
     category: "テクノロジー",
-    lang: "zh",
+    tier: "sub",
   },
   {
-    name: "ETtoday 旅遊雲",
-    url: "https://feeds.feedburner.com/ettoday/travel",
-    category: "トレンド",
-    lang: "zh",
+    name: "TechOrange",
+    url: "https://buzzorange.com/techorange/feed",
+    category: "テクノロジー",
+    tier: "sub",
   },
-  // === 台湾政府系 ===
+  // 参考
   {
-    name: "Taiwan Today",
-    url: "https://api.taiwantoday.tw/en/rss.php",
-    category: "政治",
-    lang: "en",
+    name: "Business Next",
+    url: "https://www.bnext.com.tw/rss",
+    category: "ビジネス",
+    tier: "ref",
+  },
+  {
+    name: "The News Lens",
+    url: "https://feeds.feedburner.com/TheNewsLens",
+    category: "総合",
+    tier: "ref",
   },
 ];
 
-const MAX_PER_SOURCE = 2;
 const HOURS_24 = 24 * 60 * 60 * 1000;
+
+// カルチャー系キーワード（サブ・参考ソースのフィルタリング用）
+const CULTURE_KEYWORDS = [
+  // カフェ・グルメ
+  "咖啡", "café", "cafe", "甜點", "美食", "餐廳", "飲料", "茶", "小吃", "夜市",
+  "烘焙", "brunch", "甜品", "手搖", "珍珠奶茶",
+  // コスメ・ビューティー
+  "美妝", "保養", "化妝", "彩妝", "護膚", "面膜", "唇膏", "粉底",
+  "beauty", "cosmetic", "skincare",
+  // ファッション・ブランド
+  "時尚", "穿搭", "品牌", "設計師", "服飾", "潮流", "聯名",
+  "fashion", "brand", "design",
+  // デザイン・インテリア
+  "設計", "空間", "室內", "家居", "選物", "文創",
+  "interior", "lifestyle",
+  // SNSトレンド・バズ
+  "IG", "Instagram", "Threads", "Dcard", "PTT", "爆紅", "瘋傳", "話題",
+  "trending", "viral", "社群",
+  // エンタメ・カルチャー
+  "電影", "音樂", "展覽", "藝術", "演唱會", "偶像", "韓劇", "日劇", "動漫",
+  "movie", "music", "art", "culture",
+  // 旅行・スポット
+  "旅遊", "景點", "打卡", "秘境", "民宿", "飯店",
+  "travel", "hotel",
+  // 新商品・新サービス（消費者向け）
+  "新品", "上市", "開幕", "新店", "限定", "聯名", "快閃",
+  "launch", "new",
+];
+
+// 除外キーワード（政治・マクロ経済・軍事・外交・法改正）
+const EXCLUDE_KEYWORDS = [
+  "選舉", "立法院", "總統", "國防", "軍事", "外交", "兩岸",
+  "中共", "解放軍", "飛彈", "台海", "法案", "修法", "黨團",
+  "GDP", "央行", "利率", "通膨", "inflation",
+  "military", "defense", "missile", "election", "parliament",
+];
+
+function matchesCultureFilter(title: string, summary: string): boolean {
+  const text = (title + " " + summary).toLowerCase();
+  // 除外キーワードに該当したら除外
+  if (EXCLUDE_KEYWORDS.some((kw) => text.includes(kw.toLowerCase()))) {
+    return false;
+  }
+  // カルチャーキーワードに該当するか
+  return CULTURE_KEYWORDS.some((kw) => text.includes(kw.toLowerCase()));
+}
 
 export async function fetchAllFeeds(): Promise<RSSArticle[]> {
   const results = await Promise.allSettled(
     TAIWAN_FEEDS.map((feed) => fetchFeed(feed))
   );
 
-  // 各ソースごとに記事を収集（最大MAX_PER_SOURCE本ずつ）
-  const articlesBySource: Map<string, RSSArticle[]> = new Map();
+  const allArticles: RSSArticle[] = [];
   let successCount = 0;
   let failCount = 0;
 
@@ -174,12 +138,29 @@ export async function fetchAllFeeds(): Promise<RSSArticle[]> {
     const feed = TAIWAN_FEEDS[i];
     if (result.status === "fulfilled") {
       successCount++;
-      const limited = result.value.slice(0, MAX_PER_SOURCE);
-      console.log(`[rss] ✅ ${feed.name}: ${result.value.length} articles (using ${limited.length})`);
-      articlesBySource.set(feed.name, limited);
+      let articles = result.value;
+
+      // サブ・参考ソースはカルチャーフィルタ適用
+      if (feed.tier === "sub" || feed.tier === "ref") {
+        const before = articles.length;
+        articles = articles.filter((a) =>
+          matchesCultureFilter(a.title, a.summary)
+        );
+        console.log(
+          `[rss] ✅ ${feed.name} (${feed.tier}): ${before} → ${articles.length} after culture filter`
+        );
+      } else {
+        console.log(
+          `[rss] ✅ ${feed.name} (core): ${articles.length} articles`
+        );
+      }
+
+      allArticles.push(...articles);
     } else {
       failCount++;
-      console.warn(`[rss] ❌ ${feed.name} (${feed.url}): ${result.reason}`);
+      console.warn(
+        `[rss] ❌ ${feed.name} (${feed.url}): ${result.reason}`
+      );
     }
   }
 
@@ -187,41 +168,26 @@ export async function fetchAllFeeds(): Promise<RSSArticle[]> {
     `[rss] Total: ${successCount}/${TAIWAN_FEEDS.length} feeds succeeded, ${failCount} failed`
   );
 
-  if (successCount < 3) {
-    console.error(`[rss] Only ${successCount} feeds succeeded (minimum 3 required)`);
-  }
-
-  // 均等にラウンドロビンで選択
-  const articles: RSSArticle[] = [];
-  const sources = Array.from(articlesBySource.values());
-
-  for (let round = 0; round < MAX_PER_SOURCE; round++) {
-    for (const sourceArticles of sources) {
-      if (round < sourceArticles.length) {
-        articles.push(sourceArticles[round]);
-      }
-    }
-  }
-
-  console.log(`[rss] Round-robin selected: ${articles.length} articles from ${sources.length} sources`);
-
-  if (articles.length === 0) {
-    console.error("[rss] No articles fetched from any feed");
-    return [];
+  if (successCount < 2) {
+    console.error(
+      `[rss] Only ${successCount} feeds succeeded (minimum 2 required)`
+    );
   }
 
   // Deduplicate by title similarity
   const seen = new Set<string>();
-  const unique = articles.filter((a) => {
+  const unique = allArticles.filter((a) => {
     const key = a.title.slice(0, 30);
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   });
 
-  // Take top 30
-  const final = unique.slice(0, 30);
-  console.log(`[rss] After dedup: ${unique.length} → returning top ${final.length}`);
+  // Take top 40 articles (more input for AI selection)
+  const final = unique.slice(0, 40);
+  console.log(
+    `[rss] After dedup: ${unique.length} → returning top ${final.length}`
+  );
   return final;
 }
 
@@ -230,27 +196,21 @@ async function fetchFeed(feedSource: FeedSource): Promise<RSSArticle[]> {
     const feed = await parser.parseURL(feedSource.url);
     const now = Date.now();
 
-    let items = (feed.items || []).slice(0, 15);
+    let items = (feed.items || []).slice(0, 20);
 
     // 直近24時間以内の記事のみ
     items = items.filter((item) => {
       const pubDate = item.isoDate || item.pubDate;
-      if (!pubDate) return true; // 日付不明は含める
+      if (!pubDate) return true;
       const diff = now - new Date(pubDate).getTime();
       return diff < HOURS_24;
     });
 
-    // ソース固有のフィルタ（Taiwan関連のみ等）
-    if (feedSource.filter) {
-      items = items.filter((item) => feedSource.filter!(item.title || ""));
-    }
-
     return items.map((item) => ({
       title: cleanText(item.title || ""),
-      summary: cleanText(item.contentSnippet || item.content || "").slice(
-        0,
-        300
-      ),
+      summary: cleanText(
+        item.contentSnippet || item.content || ""
+      ).slice(0, 400),
       source: feedSource.name,
       category: feedSource.category,
       url: item.link || "",

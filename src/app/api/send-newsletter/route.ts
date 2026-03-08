@@ -42,7 +42,6 @@ export async function POST(request: Request) {
     const newsData = extractDataFromHTML(html);
 
     if (testEmail) {
-      // Send test email to specified address
       await sendTestEmail(testEmail, newsData, latestDate);
       return NextResponse.json({
         success: true,
@@ -76,41 +75,29 @@ export async function POST(request: Request) {
 // Extract minimal data from stored HTML for email teaser
 function extractDataFromHTML(html: string): TaiwanNewsData {
   const titleMatch = html.match(/<title>台灣生成新聞 (No\. \d+) — (.+?)<\/title>/);
-  const heroHeadlineMatch = html.match(/<article class="hero">[\s\S]*?<h1>(.+?)<\/h1>/);
-  const heroLeadMatch = html.match(/<p class="lead">(.+?)<\/p>/);
-  const heroCategoryMatch = html.match(/<span class="tag">(.+?)<\/span>/);
+  const heroTitleMatch = html.match(/<article class="hero">[\s\S]*?<h2>(.+?)<\/h2>/);
+  const heroLeadMatch = html.match(/<div class="lead">(.+?)<\/div>/);
 
-  // Extract headlines
-  const headlineMatches = [...html.matchAll(/<div class="hl-body">\s*<span class="hl-tag">(.+?)<\/span>\s*<h3>(.+?)<\/h3>/g)];
+  // Extract article titles from h3 tags inside .article divs
+  const articleTitleMatches = [...html.matchAll(/<div class="article">\s*<h3>(.+?)<\/h3>/g)];
 
   return {
     date: titleMatch?.[2] || new Date().toISOString().split("T")[0],
     issueNumber: titleMatch?.[1] || "No. 001",
-    weather: { taipei: { temp: 25, condition: "晴" }, kaohsiung: { temp: 27, condition: "晴" } },
-    stockData: {
-      twdJpy: { value: "4.80", delta: "", direction: "flat" },
-      taiex: { value: "22000", delta: "", direction: "flat" },
-    },
-    hero: {
-      category: heroCategoryMatch?.[1] || "NEWS",
-      headline: heroHeadlineMatch?.[1] || "本日のニュース",
+    todayTrend: {
+      title: heroTitleMatch?.[1] || "本日のトレンド",
       lead: heroLeadMatch?.[1] || "",
-      source: { name: "", url: "" },
+      body: "",
     },
-    headlines: headlineMatches.slice(0, 5).map((m) => ({
-      category: m[1],
-      headline: m[2],
-      source: { name: "", url: "" },
-    })),
-    trivia: { label: "", title: "", body: "" },
-    business: { metrics: [], articles: [], bizWord: { label: "", title: "", body: "" } },
-    japanEntry: {
-      metrics: [], cards: [], articles: [],
-      caseStudy: { label: "", title: "", body: "", source: { name: "", url: "" } },
-      trendWatch: { label: "", title: "", body: "" },
+    cafeGourmet: {
+      articles: articleTitleMatches.slice(0, 2).map((m) => ({
+        title: m[1],
+        body: "",
+      })),
     },
-    culture: { featured: [], articles: [] },
-    lifeInTaiwan: { articles: [], lifeTip: { label: "", title: "", body: "" } },
+    beautyBrand: { articles: [] },
+    snsBuzz: { items: [] },
+    taiwanLooksAtJapan: { title: "", body: "" },
     imagePrompt: "",
   };
 }

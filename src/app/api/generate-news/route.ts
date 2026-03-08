@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { fetchAllFeeds } from "@/lib/rss";
-import { fetchMarketAndWeather } from "@/lib/stock";
 import { generateNewspaper } from "@/lib/translate";
 import { generateHeroImage } from "@/lib/image";
 import { generateNewsHTML } from "@/lib/template";
@@ -36,11 +35,8 @@ export async function POST(request: Request) {
       });
     }
 
-    // Step 1 & 2: Fetch RSS + market data in parallel
-    const [articles, marketWeather] = await Promise.all([
-      fetchAllFeeds(),
-      fetchMarketAndWeather(),
-    ]);
+    // Step 1: Fetch RSS articles
+    const articles = await fetchAllFeeds();
 
     if (articles.length === 0) {
       return NextResponse.json(
@@ -49,27 +45,22 @@ export async function POST(request: Request) {
       );
     }
 
-    // Step 3: Increment issue counter
+    // Step 2: Increment issue counter
     const issueNumber = await incrementIssueCounter();
 
-    // Step 4: Call Claude API for translation + content generation
-    const newsData = await generateNewspaper(
-      articles,
-      { twdJpy: marketWeather.twdJpy, taiex: marketWeather.taiex },
-      { taipei: marketWeather.taipei, kaohsiung: marketWeather.kaohsiung },
-      issueNumber
-    );
+    // Step 3: Call Claude API for content generation
+    const newsData = await generateNewspaper(articles, issueNumber);
 
-    // Step 5: Generate hero image
+    // Step 4: Generate hero image
     const heroImageUrl = await generateHeroImage(newsData.imagePrompt);
     if (heroImageUrl) {
       newsData.heroImageUrl = heroImageUrl;
     }
 
-    // Step 6: Generate HTML
+    // Step 5: Generate HTML
     const html = generateNewsHTML(newsData);
 
-    // Step 7: Store in Redis
+    // Step 6: Store in Redis
     await storeIssue(today, html);
 
     return NextResponse.json({
