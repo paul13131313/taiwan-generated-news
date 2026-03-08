@@ -32,7 +32,7 @@ body {
 /* ===== Header ===== */
 .header { padding: 12px 28px 10px; text-align: center; }
 .header-issue { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--mono); font-size: 0.7rem; color: var(--gray); letter-spacing: 0.04em; }
-.header-rule { border: none; border-top: 1px solid var(--black); margin: 2px 0 0; }
+
 .header-title { font-size: 2.4rem; font-weight: 900; letter-spacing: 0.14em; color: var(--black); line-height: 1.3; margin-top: 18px; }
 .header-sub { margin-top: 6px; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
 .header-market { display: flex; justify-content: center; gap: 40px; margin-top: 12px; }
@@ -363,7 +363,6 @@ ${ogImage ? `<meta name="twitter:image" content="${esc(ogImage)}">` : ""}
     <span>${esc(data.issueNumber)}</span>
     <span>${esc(data.date)}</span>
   </div>
-  <hr class="header-rule">
   <h1 class="header-title">台灣生成新聞</h1>
   <div class="header-sub">Taiwan Trend Curation</div>
   ${hasMarketInfo ? `<div class="header-market">${taiexCard}${weatherCard}</div>` : ""}
