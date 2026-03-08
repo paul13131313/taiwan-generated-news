@@ -74,8 +74,13 @@ export async function fetchHeaderInfo(): Promise<HeaderInfo> {
     fetchTaipeiWeather(),
   ]);
 
+  const taiexVal = taiex.status === "fulfilled" ? taiex.value : undefined;
+  const weatherVal = weather.status === "fulfilled" ? weather.value : undefined;
+
+  console.log(`[stock] TAIEX: ${taiexVal ?? "failed"}, Weather: ${weatherVal ?? "failed"}`);
+
   return {
-    taiex: taiex.status === "fulfilled" ? taiex.value : undefined,
-    weather: weather.status === "fulfilled" ? weather.value : undefined,
+    taiex: taiexVal,
+    weather: weatherVal,
   };
 }
