@@ -30,11 +30,11 @@ body {
 .newspaper { max-width: 680px; margin: 0 auto; background: var(--white); }
 
 /* ===== Header ===== */
-.header { padding: 44px 28px 36px; text-align: center; }
+.header { padding: 44px 28px 20px; text-align: center; }
 .header-title { font-size: 2.4rem; font-weight: 900; letter-spacing: 0.14em; color: var(--black); line-height: 1.3; }
 .header-sub { margin-top: 6px; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
 .header-issue { display: flex; justify-content: center; gap: 16px; margin-top: 18px; font-size: 0.75rem; color: var(--gray); }
-.header-market { display: flex; justify-content: center; gap: 40px; margin-top: 20px; }
+.header-market { display: flex; justify-content: center; gap: 40px; margin-top: 14px; }
 .header-market .market-card { text-align: center; }
 .header-market .market-label { font-family: var(--mono); font-size: 0.55rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-light); }
 .header-market .market-value { font-family: var(--mono); font-size: 0.85rem; font-weight: 700; color: var(--gray); margin-top: 3px; letter-spacing: 0.02em; }
@@ -47,22 +47,25 @@ body {
 .sec-header .sec-en { font-family: var(--mono); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
 .sec-header .sec-jp { font-size: 1.1rem; font-weight: 900; margin-top: 2px; }
 
-/* ===== Hero — 今日のトレンド（大サイズ、フル幅） ===== */
+/* ===== Hero — 今日のトレンド（大サイズ・新聞トップ風） ===== */
 .hero { margin-top: 24px; }
-.hero-img { width: 100%; border-radius: 6px; overflow: hidden; margin-bottom: 20px; position: relative; }
+.hero-img { width: 100%; overflow: hidden; margin-bottom: 20px; position: relative; }
 .hero-img img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
 .hero-img .hero-fallback { width: 100%; aspect-ratio: 16 / 9; background: linear-gradient(135deg, #ff9a76, #e85d3a); display: flex; align-items: center; justify-content: center; }
 .hero-img .hero-fallback span { font-size: 2rem; color: rgba(255,255,255,0.5); letter-spacing: 0.3em; }
 .ai-credit { position: absolute; bottom: 4px; right: 6px; color: rgba(255,255,255,0.7); font-family: 'Courier New', monospace; font-size: 0.5rem; line-height: 1; pointer-events: none; }
-.hero h2 { font-size: 1.5rem; font-weight: 900; line-height: 1.5; }
-.hero .lead { font-size: 1rem; line-height: 1.9; color: #444; margin-top: 8px; font-weight: 500; }
-.hero .body { font-size: 1rem; line-height: 2; color: #333; margin-top: 12px; }
+.hero h2 { font-size: 1.6rem; font-weight: 900; line-height: 1.45; letter-spacing: -0.01em; border-bottom: 3px double var(--black); padding-bottom: 10px; }
+.hero .lead { font-size: 1.05rem; line-height: 1.85; color: #222; margin-top: 12px; font-weight: 700; }
+.hero .body { font-size: 0.95rem; line-height: 2; color: #333; margin-top: 10px; }
+.hero .hero-meta { display: flex; align-items: center; gap: 12px; margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 0.75rem; color: var(--gray-light); }
+.hero .hero-meta .meta-cat { font-family: var(--mono); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-light); padding: 2px 8px; border-radius: 2px; }
 
 /* ===== 2段組グリッド（カフェ＆グルメ / ビューティー＆ブランド） ===== */
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 0; }
-.two-col .col { padding: 0; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 0; align-items: stretch; }
+.two-col .col { padding: 0; display: flex; flex-direction: column; }
 .two-col .col:first-child { padding-right: 20px; border-right: 1px solid var(--line); }
 .two-col .col:last-child { padding-left: 20px; }
+.two-col .col .col-article:last-child { flex: 1; border-bottom: none; }
 .two-col .col-header { padding-bottom: 8px; border-bottom: 2px solid var(--black); margin-bottom: 12px; }
 .two-col .col-header .sec-en { font-family: var(--mono); font-size: 0.55rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
 .two-col .col-header .sec-jp { font-size: 0.95rem; font-weight: 900; margin-top: 1px; }
@@ -73,11 +76,14 @@ body {
 .col-article h3 { font-size: 0.95rem; font-weight: 800; line-height: 1.45; }
 .col-article .body { font-size: 0.85rem; line-height: 1.75; color: #444; margin-top: 6px; }
 
-/* ===== SNSバズ — 横並びチップ風 ===== */
-.buzz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
-.buzz-card { padding: 14px 16px; background: var(--bg); border-radius: 8px; border: 1px solid var(--line); }
-.buzz-card h4 { font-size: 0.9rem; font-weight: 700; line-height: 1.45; color: var(--black); }
-.buzz-card p { font-size: 0.8rem; line-height: 1.65; color: #555; margin-top: 4px; }
+/* ===== SNSバズ — タイル風（囲い線なし） ===== */
+.buzz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 8px; }
+.buzz-card { padding: 14px 16px; }
+.buzz-card:nth-child(odd) { border-right: 1px solid var(--line); }
+.buzz-card:nth-child(1), .buzz-card:nth-child(2) { border-bottom: 1px solid var(--line); }
+.buzz-card h4 { font-size: 0.88rem; font-weight: 700; line-height: 1.45; color: var(--black); }
+.buzz-card h4::before { content: '#'; color: var(--accent); font-family: var(--mono); font-weight: 900; margin-right: 3px; }
+.buzz-card p { font-size: 0.78rem; line-height: 1.65; color: #555; margin-top: 4px; }
 
 /* ===== 台湾人が見ている日本 — 引用風デザイン ===== */
 .japan-article { padding: 20px 24px; margin-top: 12px; background: #f8f6f4; border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; }
@@ -92,6 +98,7 @@ body {
 
 /* ===== Source Link — via 媒体名 ===== */
 .source-via { margin-top: 8px; font-size: 0.72rem; color: var(--gray-light); }
+.hero-meta .source-via { margin-top: 0; display: inline; }
 .source-via a { color: var(--gray); text-decoration: none; font-weight: 500; }
 .source-via a:hover { color: var(--accent); text-decoration: underline; }
 
@@ -141,6 +148,9 @@ body {
   .two-col .col:first-child { padding-right: 0; border-right: none; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
   .two-col .col:last-child { padding-left: 0; padding-top: 16px; }
   .buzz-grid { grid-template-columns: 1fr; }
+  .buzz-card:nth-child(odd) { border-right: none; }
+  .buzz-card { border-bottom: 1px solid var(--line); }
+  .buzz-card:last-child { border-bottom: none; }
 }
 
 /* Animation */
@@ -328,7 +338,7 @@ ${ogImage ? `<meta name="twitter:image" content="${esc(ogImage)}">` : ""}
 
 <main class="content">
 
-<!-- ① 今日のトレンド（大サイズ・フル幅） -->
+<!-- ① 今日のトレンド（大サイズ・新聞トップ風） -->
 ${renderSectionHeader("Today's Trend", "今日のトレンド")}
 
 <article class="hero">
@@ -339,7 +349,10 @@ ${renderSectionHeader("Today's Trend", "今日のトレンド")}
   <h2>${esc(data.todayTrend.title)}</h2>
   <div class="lead">${esc(data.todayTrend.lead)}</div>
   <div class="body">${esc(data.todayTrend.body)}</div>
-  ${renderViaLink(data.todayTrend.sourceUrl, data.todayTrend.sourceName)}
+  <div class="hero-meta">
+    <span class="meta-cat">TOP STORY</span>
+    ${renderViaLink(data.todayTrend.sourceUrl, data.todayTrend.sourceName)}
+  </div>
   ${renderGlossary(data.todayTrend.glossary)}
 </article>
 
