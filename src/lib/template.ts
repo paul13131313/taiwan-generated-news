@@ -32,7 +32,7 @@ body {
 /* ===== Header ===== */
 .header { padding: 12px 28px 10px; text-align: center; }
 .header-issue { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--mono); font-size: 0.7rem; color: var(--gray); letter-spacing: 0.04em; }
-.header-rule { border: none; border-top: 1px solid var(--black); margin: 4px 0 0; }
+.header-rule { border: none; border-top: 1px solid var(--black); margin: 2px 0 0; }
 .header-title { font-size: 2.4rem; font-weight: 900; letter-spacing: 0.14em; color: var(--black); line-height: 1.3; margin-top: 18px; }
 .header-sub { margin-top: 6px; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
 .header-market { display: flex; justify-content: center; gap: 40px; margin-top: 12px; }
@@ -93,8 +93,8 @@ body {
 .japan-article .body { font-size: 0.92rem; line-height: 1.85; color: #444; margin-top: 8px; }
 
 /* ===== 台湾文化史 — コラム風デザイン ===== */
-.culture-history { margin-top: 12px; padding: 24px 28px; background: #1a1a1a; color: #e8e8e8; border-radius: 4px; }
-.culture-history h3 { font-size: 1.1rem; font-weight: 800; line-height: 1.5; color: #fff; }
+.culture-history { margin-top: 12px; padding: 24px 28px; background: #2c2c2c; color: #e8e8e8; border-radius: 4px; }
+.culture-history h3 { font-size: 1.1rem; font-weight: 800; line-height: 1.5; color: #f0f0f0; }
 .culture-history .body { font-size: 0.9rem; line-height: 2; color: #ccc; margin-top: 10px; }
 .culture-history .source-via { color: #888; }
 .culture-history .source-via a { color: #aaa; }
