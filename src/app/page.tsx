@@ -33,27 +33,31 @@ export default function LandingPage() {
 
         <div style={styles.content}>
           <p style={styles.desc}>
-            台湾のカフェ、コスメ、SNSバズ、カルチャー。<br />
-            現地メディアのトレンドをAIが毎朝キュレーション。<br />
-            「面白い・行きたい・欲しい」が見つかるメディア。
+            台湾カルチャーの「今」と「歴史」を毎朝AIがキュレーション。<br />
+            カフェ、コスメ、SNSバズから文化史コラムまで。<br />
+            日本人のための台湾トレンド新聞。
           </p>
 
           <div style={styles.features}>
             <div style={styles.feature}>
               <span style={styles.featureIcon}>☕</span>
-              <span>台湾カフェ＆グルメの最新トレンド</span>
+              <span>カフェ＆グルメ — 話題の新店・トレンドフード</span>
             </div>
             <div style={styles.feature}>
               <span style={styles.featureIcon}>💄</span>
-              <span>台湾発コスメ・ブランド情報</span>
+              <span>ビューティー＆ブランド — 台湾発コスメ・デザイナー</span>
             </div>
             <div style={styles.feature}>
               <span style={styles.featureIcon}>📱</span>
-              <span>台湾SNSで今バズっていること</span>
+              <span>SNSバズ — 台湾のSNSで今バズっていること</span>
             </div>
             <div style={styles.feature}>
               <span style={styles.featureIcon}>🇯🇵</span>
-              <span>台湾人が見ている日本——逆視点コラム</span>
+              <span>台湾人が見ている日本 — 逆視点コラム</span>
+            </div>
+            <div style={styles.feature}>
+              <span style={styles.featureIcon}>🏛️</span>
+              <span>台湾文化史 — 世界を動かした台湾カルチャーの解説</span>
             </div>
             <div style={styles.feature}>
               <span style={styles.featureIcon}>📧</span>
