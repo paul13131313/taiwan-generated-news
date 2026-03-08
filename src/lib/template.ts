@@ -5,7 +5,7 @@ import type {
   BuzzItem,
 } from "./types";
 
-// ===== CSS — カルチャーマガジン風 =====
+// ===== CSS — 台湾トレンド新聞風 =====
 
 const CSS = `
 :root {
@@ -27,71 +27,78 @@ body {
   font-size: 17px; line-height: 1.9; letter-spacing: 0.02em;
   -webkit-font-smoothing: antialiased;
 }
-.magazine { max-width: 680px; margin: 0 auto; background: var(--white); }
+.newspaper { max-width: 680px; margin: 0 auto; background: var(--white); }
 
-/* Header */
-.header { padding: 32px 28px 24px; text-align: center; border-bottom: 1px solid var(--line); }
-.header-title { font-size: 1.6rem; font-weight: 900; letter-spacing: 0.08em; color: var(--black); }
-.header-sub { margin-top: 4px; font-family: var(--mono); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
-.header-info { display: flex; justify-content: center; gap: 12px; margin-top: 12px; font-size: 0.75rem; color: var(--gray-light); }
+/* Header — 新聞ぽさ */
+.header { padding: 32px 28px 20px; text-align: center; border-bottom: 3px double var(--black); }
+.header-title { font-size: 1.8rem; font-weight: 900; letter-spacing: 0.1em; color: var(--black); }
+.header-sub { margin-top: 2px; font-family: var(--mono); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.header-meta { display: flex; justify-content: center; gap: 16px; margin-top: 12px; font-size: 0.72rem; color: var(--gray-light); flex-wrap: wrap; }
+.header-meta .meta-item { display: flex; align-items: center; gap: 4px; }
+.header-meta .taiex { font-family: var(--mono); font-weight: 600; color: var(--gray); }
 
 /* Content */
 .content { padding: 0 28px; }
 
 /* Section Header */
-.sec-header { margin: 48px 0 20px; padding-bottom: 12px; border-bottom: 2px solid var(--accent); }
+.sec-header { margin: 40px 0 16px; padding-bottom: 10px; border-bottom: 2px solid var(--black); }
 .sec-header .sec-en { font-family: var(--mono); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
-.sec-header .sec-jp { font-size: 1.1rem; font-weight: 800; margin-top: 2px; }
+.sec-header .sec-jp { font-size: 1.1rem; font-weight: 900; margin-top: 2px; }
 
-/* Hero / Today's Trend */
-.hero { margin-top: 32px; }
-.hero-img { width: 100%; border-radius: 8px; overflow: hidden; margin-bottom: 20px; position: relative; }
+/* Hero / Today's Trend — 大サイズ */
+.hero { margin-top: 24px; }
+.hero-img { width: 100%; border-radius: 6px; overflow: hidden; margin-bottom: 20px; position: relative; }
 .hero-img img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
 .hero-img .hero-fallback { width: 100%; aspect-ratio: 16 / 9; background: linear-gradient(135deg, #ff9a76, #e85d3a); display: flex; align-items: center; justify-content: center; }
 .hero-img .hero-fallback span { font-size: 2rem; color: rgba(255,255,255,0.5); letter-spacing: 0.3em; }
 .ai-credit { position: absolute; bottom: 4px; right: 6px; color: rgba(255,255,255,0.7); font-family: 'Courier New', monospace; font-size: 0.5rem; line-height: 1; pointer-events: none; }
 .hero h2 { font-size: 1.5rem; font-weight: 900; line-height: 1.5; }
-.hero .lead { font-size: 1rem; line-height: 1.9; color: #444; margin-top: 10px; }
-.hero .body { font-size: 1rem; line-height: 2; color: #333; margin-top: 14px; }
+.hero .lead { font-size: 1rem; line-height: 1.9; color: #444; margin-top: 8px; font-weight: 500; }
+.hero .body { font-size: 1rem; line-height: 2; color: #333; margin-top: 12px; }
 
-/* Article */
-.article { padding: 24px 0; border-bottom: 1px solid var(--line); }
+/* Source Link — 元記事リンク */
+.source-link { display: inline-flex; align-items: center; gap: 4px; margin-top: 12px; font-size: 0.82rem; font-weight: 600; color: var(--accent); text-decoration: none; }
+.source-link:hover { text-decoration: underline; }
+.source-link::before { content: '〉'; }
+
+/* Article — 中サイズ */
+.article { padding: 20px 0; border-bottom: 1px solid var(--line); }
 .article:last-child { border-bottom: none; }
-.article h3 { font-size: 1.2rem; font-weight: 800; line-height: 1.5; }
-.article .body { font-size: 1rem; line-height: 2; color: #333; margin-top: 10px; }
+.article h3 { font-size: 1.15rem; font-weight: 800; line-height: 1.5; }
+.article .body { font-size: 0.95rem; line-height: 1.9; color: #333; margin-top: 8px; }
 
-/* Buzz */
-.buzz-item { padding: 16px 0; border-bottom: 1px solid var(--line); }
+/* Buzz — 小サイズ */
+.buzz-item { padding: 14px 0; border-bottom: 1px solid var(--line); }
 .buzz-item:last-child { border-bottom: none; }
-.buzz-item h4 { font-size: 1.05rem; font-weight: 700; line-height: 1.5; color: var(--black); }
-.buzz-item p { font-size: 0.95rem; line-height: 1.8; color: #555; margin-top: 4px; }
+.buzz-item h4 { font-size: 1rem; font-weight: 700; line-height: 1.5; color: var(--black); }
+.buzz-item p { font-size: 0.88rem; line-height: 1.7; color: #555; margin-top: 2px; }
 
 /* Glossary */
-.glossary-box { margin: 16px 0 8px; padding: 14px 18px; background: var(--accent-light); border-radius: 8px; }
-.glossary-box .gl-label { font-family: var(--mono); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 8px; }
+.glossary-box { margin: 12px 0 4px; padding: 12px 16px; background: var(--accent-light); border-radius: 6px; }
+.glossary-box .gl-label { font-family: var(--mono); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 6px; }
 .glossary-box .gl-label::before { content: '📖 '; font-size: 0.7rem; }
 .glossary-box dl { margin: 0; }
-.glossary-box dt { font-size: 0.82rem; font-weight: 700; color: var(--black); margin-top: 6px; display: inline; }
-.glossary-box dt .gl-reading { font-weight: 500; color: var(--gray); font-size: 0.78rem; }
-.glossary-box dd { font-size: 0.8rem; color: #555; margin-left: 0; display: inline; }
+.glossary-box dt { font-size: 0.8rem; font-weight: 700; color: var(--black); margin-top: 4px; display: inline; }
+.glossary-box dt .gl-reading { font-weight: 500; color: var(--gray); font-size: 0.76rem; }
+.glossary-box dd { font-size: 0.78rem; color: #555; margin-left: 0; display: inline; }
 .glossary-box dd::after { content: ''; display: block; margin-bottom: 2px; }
 
 /* Divider */
-.divider { border: none; border-top: 1px solid var(--line); margin: 36px 0; }
+.divider { border: none; border-top: 1px solid var(--line); margin: 32px 0; }
 
 /* Disclaimer */
-.disclaimer { margin: 40px 0 0; padding: 16px 20px; background: var(--bg); border-radius: 8px; font-size: 0.75rem; line-height: 1.7; color: var(--gray-light); }
+.disclaimer { margin: 40px 0 0; padding: 14px 18px; background: var(--bg); border-radius: 6px; font-size: 0.72rem; line-height: 1.7; color: var(--gray-light); }
 
 /* CTA */
-.cta-box { margin: 32px 0; padding: 24px; background: var(--bg); border-radius: 8px; border: 1px solid var(--line); }
+.cta-box { margin: 28px 0; padding: 20px; background: var(--bg); border-radius: 6px; border: 1px solid var(--line); }
 .cta-box .cta-tag { font-family: var(--mono); font-size: 0.55rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-light); }
-.cta-box h3 { font-size: 1rem; font-weight: 700; margin-top: 6px; }
-.cta-box p { font-size: 0.9rem; line-height: 1.8; color: #555; margin-top: 6px; }
-.cta-box a { display: inline-flex; align-items: center; gap: 4px; margin-top: 12px; font-family: var(--mono); font-size: 0.72rem; font-weight: 700; color: var(--accent); text-decoration: none; }
+.cta-box h3 { font-size: 0.95rem; font-weight: 700; margin-top: 4px; }
+.cta-box p { font-size: 0.85rem; line-height: 1.8; color: #555; margin-top: 4px; }
+.cta-box a { display: inline-flex; align-items: center; gap: 4px; margin-top: 10px; font-family: var(--mono); font-size: 0.72rem; font-weight: 700; color: var(--accent); text-decoration: none; }
 .cta-box a::after { content: ' →'; }
 
 /* Footer */
-.footer { padding: 24px 28px; border-top: 1px solid var(--line); text-align: center; }
+.footer { padding: 20px 28px; border-top: 3px double var(--black); text-align: center; }
 .footer .f-brand { font-family: var(--mono); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; color: var(--gray); }
 .footer .f-brand span { color: var(--accent); }
 .footer .f-desc { font-size: 0.7rem; color: var(--gray-light); margin-top: 4px; }
@@ -102,8 +109,8 @@ body {
 /* Responsive */
 @media (max-width: 600px) {
   body { background: var(--white); font-size: 16px; }
-  .magazine { box-shadow: none; }
-  .header { padding: 24px 20px 20px; }
+  .newspaper { box-shadow: none; }
+  .header { padding: 24px 20px 16px; }
   .content { padding: 0 20px; }
   .hero h2 { font-size: 1.3rem; }
 }
@@ -140,6 +147,11 @@ function renderGlossary(items?: GlossaryItem[]): string {
     </div>`;
 }
 
+function renderSourceLink(url?: string): string {
+  if (!url) return "";
+  return `<a class="source-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">元記事を読む</a>`;
+}
+
 function renderSectionHeader(en: string, jp: string): string {
   return `<div class="sec-header"><span class="sec-en">${esc(en)}</span><div class="sec-jp">${esc(jp)}</div></div>`;
 }
@@ -149,6 +161,7 @@ function renderArticle(article: Article): string {
     <div class="article">
       <h3>${esc(article.title)}</h3>
       <div class="body">${esc(article.body)}</div>
+      ${renderSourceLink(article.sourceUrl)}
       ${renderGlossary(article.glossary)}
     </div>`;
 }
@@ -158,6 +171,7 @@ function renderBuzzItem(item: BuzzItem): string {
     <div class="buzz-item">
       <h4>${esc(item.title)}</h4>
       <p>${esc(item.description)}</p>
+      ${renderSourceLink(item.sourceUrl)}
     </div>`;
 }
 
@@ -169,6 +183,15 @@ export function generateNewsHTML(data: TaiwanNewsData): string {
     : `<div class="hero-fallback"><span>台灣</span></div>`;
 
   const ogImage = data.heroImageUrl || "";
+
+  // ヘッダーのTAIEX・天気
+  const headerInfo = data.headerInfo;
+  const taiexHtml = headerInfo?.taiex
+    ? `<span class="meta-item"><span class="taiex">TAIEX ${esc(headerInfo.taiex)}</span></span>`
+    : "";
+  const weatherHtml = headerInfo?.weather
+    ? `<span class="meta-item">台北 ${esc(headerInfo.weather)}</span>`
+    : "";
 
   return `<!DOCTYPE html>
 <html lang="ja">
@@ -191,14 +214,16 @@ ${ogImage ? `<meta name="twitter:image" content="${esc(ogImage)}">` : ""}
 <style>${CSS}</style>
 </head>
 <body>
-<div class="magazine">
+<div class="newspaper">
 
 <header class="header">
   <h1 class="header-title">台灣生成新聞</h1>
   <div class="header-sub">Taiwan Trend Curation</div>
-  <div class="header-info">
-    <span>${esc(data.issueNumber)}</span>
-    <span>${esc(data.date)}</span>
+  <div class="header-meta">
+    <span class="meta-item">${esc(data.issueNumber)}</span>
+    <span class="meta-item">${esc(data.date)}</span>
+    ${taiexHtml}
+    ${weatherHtml}
   </div>
 </header>
 
@@ -215,6 +240,7 @@ ${renderSectionHeader("Today's Trend", "今日の台湾トレンド")}
   <h2>${esc(data.todayTrend.title)}</h2>
   <div class="lead">${esc(data.todayTrend.lead)}</div>
   <div class="body">${esc(data.todayTrend.body)}</div>
+  ${renderSourceLink(data.todayTrend.sourceUrl)}
   ${renderGlossary(data.todayTrend.glossary)}
 </article>
 
@@ -245,11 +271,7 @@ ${renderGlossary(data.snsBuzz.glossary)}
 <!-- ⑤ 台湾人が見ている日本 -->
 ${renderSectionHeader("Taiwan Looks at Japan", "台湾人が見ている日本")}
 
-<div class="article">
-  <h3>${esc(data.taiwanLooksAtJapan.title)}</h3>
-  <div class="body">${esc(data.taiwanLooksAtJapan.body)}</div>
-  ${renderGlossary(data.taiwanLooksAtJapan.glossary)}
-</div>
+${data.taiwanLooksAtJapan.articles.map((a) => renderArticle(a)).join("")}
 
 <div class="disclaimer">
   本サイトは各報道機関・メディアの公開記事を参考に、AIがキュレーション・要約したものです。正確性については原典をご確認ください。記事の著作権は各報道機関に帰属します。

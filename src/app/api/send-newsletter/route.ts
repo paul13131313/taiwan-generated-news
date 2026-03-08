@@ -97,7 +97,7 @@ function extractDataFromHTML(html: string): TaiwanNewsData {
     },
     beautyBrand: { articles: [] },
     snsBuzz: { items: [] },
-    taiwanLooksAtJapan: { title: "", body: "" },
+    taiwanLooksAtJapan: { articles: [] },
     imagePrompt: "",
   };
 }

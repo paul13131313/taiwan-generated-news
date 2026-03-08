@@ -19,6 +19,7 @@ export interface GlossaryItem {
 export interface Article {
   title: string;
   body: string;
+  sourceUrl?: string;
   glossary?: GlossaryItem[];
 }
 
@@ -26,6 +27,7 @@ export interface Article {
 export interface BuzzItem {
   title: string;
   description: string;
+  sourceUrl?: string;
 }
 
 // ===== Newspaper Data Structure =====
@@ -33,11 +35,18 @@ export interface TaiwanNewsData {
   date: string;
   issueNumber: string;
 
+  // ヘッダー表示用（TAIEX・天気）
+  headerInfo?: {
+    taiex?: string;
+    weather?: string;
+  };
+
   // ① 今日の台湾トレンド（トップ）
   todayTrend: {
     title: string;
     lead: string;
     body: string;
+    sourceUrl?: string;
     glossary?: GlossaryItem[];
   };
 
@@ -57,11 +66,9 @@ export interface TaiwanNewsData {
     glossary?: GlossaryItem[];
   };
 
-  // ⑤ 台湾人が見ている日本
+  // ⑤ 台湾人が見ている日本（1-2本）
   taiwanLooksAtJapan: {
-    title: string;
-    body: string;
-    glossary?: GlossaryItem[];
+    articles: Article[];
   };
 
   // ヒーロー画像用プロンプト（FLUX生成）

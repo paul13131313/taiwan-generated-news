@@ -3,6 +3,7 @@ import { fetchAllFeeds } from "@/lib/rss";
 import { generateNewspaper } from "@/lib/translate";
 import { generateHeroImage } from "@/lib/image";
 import { generateNewsHTML } from "@/lib/template";
+import { fetchHeaderInfo } from "@/lib/stock";
 import { storeIssue, incrementIssueCounter, issueExists, getTaiwanToday } from "@/lib/redis";
 
 export const dynamic = "force-dynamic";
@@ -35,8 +36,11 @@ export async function POST(request: Request) {
       });
     }
 
-    // Step 1: Fetch RSS articles
-    const articles = await fetchAllFeeds();
+    // Step 1: Fetch RSS articles + header info in parallel
+    const [articles, headerInfo] = await Promise.all([
+      fetchAllFeeds(),
+      fetchHeaderInfo(),
+    ]);
 
     if (articles.length === 0) {
       return NextResponse.json(
@@ -51,16 +55,19 @@ export async function POST(request: Request) {
     // Step 3: Call Claude API for content generation
     const newsData = await generateNewspaper(articles, issueNumber);
 
-    // Step 4: Generate hero image
+    // Step 4: Set header info (TAIEX + weather)
+    newsData.headerInfo = headerInfo;
+
+    // Step 5: Generate hero image
     const heroImageUrl = await generateHeroImage(newsData.imagePrompt);
     if (heroImageUrl) {
       newsData.heroImageUrl = heroImageUrl;
     }
 
-    // Step 5: Generate HTML
+    // Step 6: Generate HTML
     const html = generateNewsHTML(newsData);
 
-    // Step 6: Store in Redis
+    // Step 7: Store in Redis
     await storeIssue(today, html);
 
     return NextResponse.json({
@@ -69,6 +76,7 @@ export async function POST(request: Request) {
       issueNumber: newsData.issueNumber,
       articlesCount: articles.length,
       heroImage: !!heroImageUrl,
+      headerInfo,
       htmlSize: html.length,
     });
   } catch (e) {

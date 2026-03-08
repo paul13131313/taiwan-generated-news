@@ -3,11 +3,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://taiwan-generated-news.vercel.app"),
-  title: "台灣生成新聞 | We TAIWAN",
-  description: "台湾現地メディアの報道をAIが日本語で要約。台湾ビジネス・日本企業進出情報を毎日お届け。",
+  title: "台灣生成新聞 — 台湾トレンドキュレーション",
+  description: "台湾のカフェ、コスメ、SNSバズ、カルチャー。現地メディアのトレンドをAIが毎朝キュレーション。面白い・行きたい・欲しいが見つかるメディア。",
   openGraph: {
-    title: "台灣生成新聞 | We TAIWAN",
-    description: "台湾現地メディアの報道をAIが日本語で要約。台湾ビジネス・日本企業進出情報を毎日お届け。",
+    title: "台灣生成新聞 — 台湾トレンドキュレーション",
+    description: "台湾のカフェ、コスメ、SNSバズ、カルチャー。現地メディアのトレンドをAIが毎朝キュレーション。",
     type: "website",
     images: [{ url: "/ogp.png", width: 1200, height: 630 }],
   },

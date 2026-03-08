@@ -76,11 +76,12 @@ function buildTeaserEmail(
   data: TaiwanNewsData,
   issueUrl: string
 ): { html: string; text: string } {
-  // Build article preview list from cafeGourmet + beautyBrand
+  // Build article preview list from cafeGourmet + beautyBrand + taiwanLooksAtJapan
   const previewArticles = [
     ...data.cafeGourmet.articles,
     ...data.beautyBrand.articles,
-  ].slice(0, 3);
+    ...data.taiwanLooksAtJapan.articles,
+  ].slice(0, 4);
 
   const articleList = previewArticles
     .map((a) => `<li style="margin-bottom:8px;font-size:14px;color:#333;">${esc(a.title)}</li>`)

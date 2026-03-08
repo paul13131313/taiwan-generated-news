@@ -9,21 +9,27 @@ function createClient() {
 
 const client = createClient();
 
-const SYSTEM_PROMPT = `あなたは「台湾トレンドメディア」の編集者です。
+const SYSTEM_PROMPT = `あなたは「台湾トレンド新聞」の編集者です。
 台湾のカルチャー・ライフスタイル・消費トレンドに精通しており、
-それを日本人読者に向けて紹介する記事を書きます。
+それを日本人読者に向けて紹介する新聞を毎日発行します。
 
 ## あなたの姿勢
-- ニュース記者ではなく、カルチャーマガジンの編集者
-- 「面白い」「行きたい」「欲しい」と思わせる記事を書く
-- 堅い政治・経済ニュースは扱わない
+- 新聞の編集者として、紙面のメリハリを意識する
+- 「面白い」「行きたい」「欲しい」と思わせる記事を選ぶ
+- 堅い政治・経済ニュースは扱わない（ヘッダーのTAIEX表示は除く）
 - 台湾のリアルな空気感を伝える
 
-## 記事の書き方
-- 導入は読者の興味を引くフックから入る（数字、問いかけ、意外な事実）
-- 「なぜ今これが話題なのか」の文脈を必ず入れる
-- 台湾現地の雰囲気が伝わる描写を入れる
-- 日本人読者にとっての「だから何？」に答える（行ける、買える、試せる等）
+## 記事の書き方（重要）
+- 記事は短くする。元記事の長い要約はしない
+- 1記事あたり100〜200字程度の紹介文＋元記事へのリンクで構成する
+- 紹介文は「なぜこの記事が面白いか」「日本人にとってのポイント」を伝える
+- 本数を増やしてバラエティを出す（量＞長さ）
+- トップ記事のみ少し長め（200〜300字）にしてよい
+
+## 記事サイズのメリハリ（新聞ぽさの演出）
+- 大（トップ記事）：1本。見出し大＋紹介文200〜300字＋リンク
+- 中（各コーナーのメイン）：各コーナー1〜2本。見出し中＋紹介文100〜200字＋リンク
+- 小（ショートニュース）：多数。見出し＋1〜2文＋リンク
 
 ## 翻訳ルール（最重要・厳守）
 - 台湾メディアのソースを参照する際、中国語の一般用語は全て日本語に翻訳する
@@ -44,7 +50,8 @@ const SYSTEM_PROMPT = `あなたは「台湾トレンドメディア」の編集
 ## 制約
 - RSS記事に含まれる事実のみ使用。捏造厳禁
 - JSONのみ出力。マークダウンのコードブロックは使わない
-- 画像生成プロンプトは英語で、台湾カルチャーの雰囲気が伝わるスタイル指示を含める`;
+- 画像生成プロンプトは英語で、台湾カルチャーの雰囲気が伝わるスタイル指示を含める
+- sourceUrlはRSS記事のURLをそのまま使用する`;
 
 export async function generateNewspaper(
   articles: RSSArticle[],
@@ -63,7 +70,7 @@ export async function generateNewspaper(
     )
     .join("\n");
 
-  const userPrompt = `以下の台湾メディアRSS記事から、カルチャーマガジンの紙面を構成してください。
+  const userPrompt = `以下の台湾メディアRSS記事から、トレンド新聞の紙面を構成してください。
 
 ## 今日の情報
 - 日付: ${dateStr}（${dayOfWeek}）
@@ -76,9 +83,10 @@ ${articleList}
 
 {
   "todayTrend": {
-    "title": "キャッチーなタイトル（日本語）",
+    "title": "キャッチーな見出し（新聞風、日本語）",
     "lead": "リード文（2〜3文、読者の興味を引くフックから入る）",
-    "body": "本文（400〜600字。なぜ今話題なのかの文脈、台湾現地の雰囲気が伝わる描写、日本人にとっての意味を含める）",
+    "body": "紹介文（200〜300字。トップ記事のみ少し長めでよい。なぜ今話題なのか、日本人にとってのポイントを伝える）",
+    "sourceUrl": "元記事のURL（RSS一覧のURLをそのまま使用）",
     "glossary": [
       { "term": "用語", "reading": "カタカナ読み（任意）", "explanation": "簡潔な説明" }
     ]
@@ -86,8 +94,9 @@ ${articleList}
   "cafeGourmet": {
     "articles": [
       {
-        "title": "タイトル（日本語）",
-        "body": "本文（200〜400字。話題の新店、トレンドドリンク、台湾ローカルフード等）",
+        "title": "見出し（日本語）",
+        "body": "紹介文（100〜200字。なぜこの記事が面白いか、日本人へのポイント）",
+        "sourceUrl": "元記事のURL",
         "glossary": [
           { "term": "用語", "reading": "カタカナ読み（任意）", "explanation": "簡潔な説明" }
         ]
@@ -97,8 +106,9 @@ ${articleList}
   "beautyBrand": {
     "articles": [
       {
-        "title": "タイトル（日本語）",
-        "body": "本文（200〜400字。台湾発コスメ、ファッション、デザインプロダクト等）",
+        "title": "見出し（日本語）",
+        "body": "紹介文（100〜200字）",
+        "sourceUrl": "元記事のURL",
         "glossary": [
           { "term": "用語", "reading": "カタカナ読み（任意）", "explanation": "簡潔な説明" }
         ]
@@ -109,7 +119,8 @@ ${articleList}
     "items": [
       {
         "title": "見出し（日本語）",
-        "description": "解説（50〜100字。台湾SNSで今バズっていること）"
+        "description": "1〜2文の解説（50〜100字）",
+        "sourceUrl": "関連リンク（あれば）"
       }
     ],
     "glossary": [
@@ -117,21 +128,26 @@ ${articleList}
     ]
   },
   "taiwanLooksAtJapan": {
-    "title": "タイトル（日本語）",
-    "body": "本文（200〜400字。台湾メディアが取り上げた日本関連の記事を台湾人の目線で紹介）",
-    "glossary": [
-      { "term": "用語", "reading": "カタカナ読み（任意）", "explanation": "簡潔な説明" }
+    "articles": [
+      {
+        "title": "見出し（日本語）",
+        "body": "紹介文（100〜200字。台湾メディアが取り上げた日本関連の記事を台湾人の目線で紹介）",
+        "sourceUrl": "元記事のURL",
+        "glossary": [
+          { "term": "用語", "reading": "カタカナ読み（任意）", "explanation": "簡潔な説明" }
+        ]
+      }
     ]
   },
   "imagePrompt": "Hero image prompt in English, 40 words max. Vibrant, well-lit, Taiwan lifestyle/culture scene. Describe a concrete visual based on the todayTrend article (e.g., trendy cafe interior, night market scene, cosmetics display). No text overlay."
 }
 
-## 各コーナーの記事数
+## 各コーナーの記事数（重要：必ず守ること）
 - todayTrend: 1本（その日最も面白いトレンド）
-- cafeGourmet.articles: 1〜2本
-- beautyBrand.articles: 1〜2本
-- snsBuzz.items: 2〜3本
-- taiwanLooksAtJapan: 1本
+- cafeGourmet.articles: 2〜3本
+- beautyBrand.articles: 2〜3本
+- snsBuzz.items: 3〜5本
+- taiwanLooksAtJapan.articles: 1〜2本
 - 同じ記事・同じトピックを複数のコーナーで使うことは禁止
 
 ## todayTrend 選定基準
@@ -140,35 +156,30 @@ ${articleList}
 - ビジュアルが想像できるもの（場所、商品、食べ物など）
 
 ## cafeGourmet テーマ例
-- 話題の新店、行列店
-- トレンドドリンク、スイーツ
-- 台湾ローカルフード事情
-- 日本未上陸の台湾グルメ
+- 話題の新店、行列店、トレンドドリンク、スイーツ
+- 台湾ローカルフード事情、日本未上陸の台湾グルメ
 
 ## beautyBrand テーマ例
-- 台湾発コスメブランドの新商品
-- 台湾デザイナー、クリエイター
-- 台湾ブランドの海外進出
-- コラボレーション
+- 台湾発コスメブランドの新商品、台湾デザイナー
+- 台湾ブランドの海外進出、コラボレーション
 
 ## snsBuzz 対象
 - 台湾のThreads、Instagram、Dcard、PTT、Xで今バズっていること
 - バイラル動画、ミーム、話題の投稿、ハッシュタグトレンド
 
 ## taiwanLooksAtJapan テーマ例
-- 台湾人に人気の日本旅行先
-- 台湾で話題の日本の商品・コンテンツ
-- 日本文化に対する台湾人の反応
-- 台湾人が意外に思う日本の習慣
+- 台湾人に人気の日本旅行先、台湾で話題の日本の商品・コンテンツ
+- 日本文化に対する台湾人の反応、台湾人が意外に思う日本の習慣
 
 ## 重要
 - RSS記事にない情報は使わない
 - glossaryは該当がなければ空配列[]
-- 記事本文中には括弧注を入れない。固有名詞はそのまま記載し、解説はglossaryにまとめる`;
+- 記事本文中には括弧注を入れない。固有名詞はそのまま記載し、解説はglossaryにまとめる
+- sourceUrlはRSS記事一覧にあるURLをそのまま使うこと`;
 
   const response = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
-    max_tokens: 6000,
+    max_tokens: 8000,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: userPrompt }],
   });
