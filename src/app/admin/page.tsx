@@ -24,6 +24,7 @@ export default function AdminPage() {
   const [sending, setSending] = useState(false);
   const [testEmail, setTestEmail] = useState("");
   const [statusMsg, setStatusMsg] = useState("");
+  const [issueCounter, setIssueCounter] = useState<number | null>(null);
 
   const authHeader = `Bearer ${password}`;
 
@@ -47,15 +48,19 @@ export default function AdminPage() {
 
   const loadData = useCallback(async () => {
     try {
-      const [subRes, issueRes] = await Promise.all([
+      const [subRes, counterRes] = await Promise.all([
         fetch("/api/subscribers", { headers: { Authorization: authHeader } }),
-        fetch("/api/subscribers", { headers: { Authorization: authHeader } }),
+        fetch("/api/reset-counter", { headers: { Authorization: authHeader } }),
       ]);
 
       if (subRes.ok) {
         const data = await subRes.json();
         setSubscribers(data.subscribers || []);
         setSubCount(data.count || 0);
+      }
+      if (counterRes.ok) {
+        const data = await counterRes.json();
+        setIssueCounter(data.currentValue ?? 0);
       }
     } catch (e) {
       console.error("Load data error:", e);
@@ -84,6 +89,26 @@ export default function AdminPage() {
       body: JSON.stringify({ email }),
     });
     loadData();
+  };
+
+  const resetCounter = async () => {
+    if (!confirm("号数カウンターを0にリセットします。次回発行がNo.001になります。よろしいですか？")) return;
+    try {
+      const res = await fetch("/api/reset-counter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: authHeader },
+        body: JSON.stringify({ startFrom: 0 }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setStatusMsg(data.message);
+        setIssueCounter(data.currentValue);
+      } else {
+        setStatusMsg(`エラー: ${data.error}`);
+      }
+    } catch (e) {
+      setStatusMsg(`エラー: ${e}`);
+    }
   };
 
   const generateNow = async () => {
@@ -176,6 +201,20 @@ export default function AdminPage() {
       {statusMsg && (
         <div style={styles.statusBar}>{statusMsg}</div>
       )}
+
+      {/* Issue Counter */}
+      <section style={styles.section}>
+        <h2 style={styles.sectionTitle}>号数管理</h2>
+        <div style={styles.row}>
+          <span style={{ fontSize: "0.85rem", color: "#ccc" }}>
+            現在のカウンター: <strong style={{ color: "#fff", fontFamily: "monospace" }}>{issueCounter ?? "..."}</strong>
+            　→ 次回発行: <strong style={{ color: "#ff4200", fontFamily: "monospace" }}>No. {issueCounter !== null ? String(issueCounter + 1).padStart(3, "0") : "..."}</strong>
+          </span>
+          <button onClick={resetCounter} style={styles.btnDanger}>
+            リセット（No.001から）
+          </button>
+        </div>
+      </section>
 
       {/* Generation Controls */}
       <section style={styles.section}>

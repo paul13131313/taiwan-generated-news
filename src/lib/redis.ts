@@ -63,6 +63,10 @@ export async function getIssueCounter(): Promise<number> {
   return val ?? 0;
 }
 
+export async function resetIssueCounter(startFrom: number = 0): Promise<void> {
+  await requireRedis().set("we-news:issue-counter", startFrom);
+}
+
 // ===== Subscribers =====
 
 export async function addSubscriber(email: string): Promise<void> {

@@ -19,26 +19,22 @@ export async function sendNewsletter(
   issueDate: string
 ): Promise<{ success: number; failed: number }> {
   const issueUrl = `${BASE_URL}/issues/${issueDate}`;
-  const { html, text } = buildTeaserEmail(data, issueUrl);
   const subject = `台灣生成新聞 ${data.issueNumber} — ${data.date}｜We TAIWAN`;
 
   let success = 0;
   let failed = 0;
 
-  // Send in batches of 50
+  // Send in batches of 50 (each email has personalized unsubscribe link)
   for (let i = 0; i < subscribers.length; i += 50) {
     const batch = subscribers.slice(i, i + 50);
 
     try {
       const fromAddress = "台灣生成新聞 <news@seiseishinbun.com>";
       const result = await resend.batch.send(
-        batch.map((to) => ({
-          from: fromAddress,
-          to,
-          subject,
-          html,
-          text,
-        }))
+        batch.map((to) => {
+          const { html, text } = buildTeaserEmail(data, issueUrl, to);
+          return { from: fromAddress, to, subject, html, text };
+        })
       );
       console.log("[email] Resend response:", JSON.stringify(result));
       console.log("[email] Sending to:", batch.join(", "), "from:", fromAddress);
@@ -58,7 +54,7 @@ export async function sendTestEmail(
   issueDate: string
 ): Promise<void> {
   const issueUrl = `${BASE_URL}/issues/${issueDate}`;
-  const { html, text } = buildTeaserEmail(data, issueUrl);
+  const { html, text } = buildTeaserEmail(data, issueUrl, to);
 
   const fromAddress = "台灣生成新聞 <news@seiseishinbun.com>";
   console.log("[email] Sending to:", to, "from:", fromAddress);
@@ -74,8 +70,12 @@ export async function sendTestEmail(
 
 function buildTeaserEmail(
   data: TaiwanNewsData,
-  issueUrl: string
+  issueUrl: string,
+  subscriberEmail?: string
 ): { html: string; text: string } {
+  const unsubscribeUrl = subscriberEmail
+    ? `${BASE_URL}/api/unsubscribe?email=${encodeURIComponent(subscriberEmail)}`
+    : "";
   // Build article preview list from cafeGourmet + beautyBrand + taiwanLooksAtJapan
   const previewArticles = [
     ...data.cafeGourmet.articles,
@@ -128,6 +128,9 @@ ${articleList ? `<tr><td style="padding:0 32px;">
   <div style="margin-top:12px;text-align:center;font-size:10px;color:#ccc;">
     各記事の著作権は原著作者に帰属します
   </div>
+${unsubscribeUrl ? `  <div style="margin-top:10px;text-align:center;">
+    <a href="${esc(unsubscribeUrl)}" style="font-size:10px;color:#999;text-decoration:underline;">配信を解除する</a>
+  </div>` : ""}
 </td></tr>
 
 </table>
@@ -148,7 +151,8 @@ ${previewArticles.map((a) => `- ${a.title}`).join("\n")}` : ""}
 
 ---
 台灣生成新聞 | Taiwan Trend Curation
-https://wewewetw.jp/`;
+https://wewewetw.jp/
+${unsubscribeUrl ? `\n配信解除: ${unsubscribeUrl}` : ""}`;
 
   return { html, text };
 }
