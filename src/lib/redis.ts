@@ -67,6 +67,27 @@ export async function resetIssueCounter(startFrom: number = 0): Promise<void> {
   await requireRedis().set("we-news:issue-counter", startFrom);
 }
 
+// ===== Delivery Status =====
+
+export interface DeliveryStatus {
+  date: string;
+  issueNumber: string;
+  sentAt: string;
+  success: number;
+  failed: number;
+  totalSubscribers: number;
+}
+
+export async function saveDeliveryStatus(status: DeliveryStatus): Promise<void> {
+  await requireRedis().set("we-news:last-send", JSON.stringify(status));
+}
+
+export async function getDeliveryStatus(): Promise<DeliveryStatus | null> {
+  const val = await requireRedis().get<string>("we-news:last-send");
+  if (!val) return null;
+  return typeof val === "string" ? JSON.parse(val) : val as unknown as DeliveryStatus;
+}
+
 // ===== Subscribers =====
 
 export async function addSubscriber(email: string): Promise<void> {

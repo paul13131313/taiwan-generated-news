@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getIssueByDate, getLatestDate, listSubscribers } from "@/lib/redis";
+import { getIssueByDate, getLatestDate, listSubscribers, saveDeliveryStatus } from "@/lib/redis";
 import { sendNewsletter, sendTestEmail } from "@/lib/email";
 import type { TaiwanNewsData } from "@/lib/types";
 
@@ -61,6 +61,17 @@ export async function POST(request: Request) {
     }
 
     const result = await sendNewsletter(subscribers, newsData, latestDate);
+
+    // Save delivery status to Redis
+    await saveDeliveryStatus({
+      date: latestDate,
+      issueNumber: newsData.issueNumber,
+      sentAt: new Date().toISOString(),
+      success: result.success,
+      failed: result.failed,
+      totalSubscribers: subscribers.length,
+    });
+
     return NextResponse.json({
       type: "broadcast",
       date: latestDate,

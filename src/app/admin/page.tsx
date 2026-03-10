@@ -2,12 +2,21 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-interface Subscriber {
-  email: string;
-}
-
-interface IssueInfo {
-  date: string;
+interface DashboardData {
+  latestDate: string | null;
+  latestIssueUrl: string | null;
+  topPageUrl: string;
+  currentCounter: number;
+  nextIssueNumber: string;
+  subscriberCount: number;
+  lastDelivery: {
+    date: string;
+    issueNumber: string;
+    sentAt: string;
+    success: number;
+    failed: number;
+    totalSubscribers: number;
+  } | null;
 }
 
 export default function AdminPage() {
@@ -26,6 +35,8 @@ export default function AdminPage() {
   const [statusMsg, setStatusMsg] = useState("");
   const [issueCounter, setIssueCounter] = useState<number | null>(null);
   const [previewPage, setPreviewPage] = useState<string>("latest");
+  const [dashboard, setDashboard] = useState<DashboardData | null>(null);
+  const [copied, setCopied] = useState<string | null>(null);
 
   const authHeader = `Bearer ${password}`;
 
@@ -49,9 +60,10 @@ export default function AdminPage() {
 
   const loadData = useCallback(async () => {
     try {
-      const [subRes, counterRes] = await Promise.all([
+      const [subRes, counterRes, dashRes] = await Promise.all([
         fetch("/api/subscribers", { headers: { Authorization: authHeader } }),
         fetch("/api/reset-counter", { headers: { Authorization: authHeader } }),
+        fetch("/api/dashboard", { headers: { Authorization: authHeader } }),
       ]);
 
       if (subRes.ok) {
@@ -62,6 +74,10 @@ export default function AdminPage() {
       if (counterRes.ok) {
         const data = await counterRes.json();
         setIssueCounter(data.currentValue ?? 0);
+      }
+      if (dashRes.ok) {
+        const data = await dashRes.json();
+        setDashboard(data);
       }
     } catch (e) {
       console.error("Load data error:", e);
@@ -90,6 +106,16 @@ export default function AdminPage() {
       body: JSON.stringify({ email }),
     });
     loadData();
+  };
+
+  const copyToClipboard = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(label);
+      setTimeout(() => setCopied(null), 2000);
+    } catch {
+      setStatusMsg("コピーに失敗しました");
+    }
   };
 
   const resetCounter = async () => {
@@ -201,6 +227,77 @@ export default function AdminPage() {
 
       {statusMsg && (
         <div style={styles.statusBar}>{statusMsg}</div>
+      )}
+
+      {/* Dashboard */}
+      {dashboard && (
+        <section style={styles.section}>
+          <h2 style={styles.sectionTitle}>ダッシュボード</h2>
+
+          {/* URL Copy Area */}
+          <div style={{ display: "flex", flexDirection: "column" as const, gap: 8, marginBottom: 16 }}>
+            {dashboard.latestIssueUrl && (
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: "0.72rem", color: "#999", minWidth: 60 }}>最新号</span>
+                <code style={{ flex: 1, fontSize: "0.78rem", color: "#8cf", background: "#1a1a2e", padding: "6px 10px", borderRadius: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>
+                  {dashboard.latestIssueUrl}
+                </code>
+                <button
+                  onClick={() => copyToClipboard(dashboard.latestIssueUrl!, "issue")}
+                  style={{ ...styles.btnSecondary, padding: "4px 12px", fontSize: "0.72rem" }}
+                >
+                  {copied === "issue" ? "✓" : "コピー"}
+                </button>
+              </div>
+            )}
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: "0.72rem", color: "#999", minWidth: 60 }}>トップ</span>
+              <code style={{ flex: 1, fontSize: "0.78rem", color: "#8cf", background: "#1a1a2e", padding: "6px 10px", borderRadius: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>
+                {dashboard.topPageUrl}
+              </code>
+              <button
+                onClick={() => copyToClipboard(dashboard.topPageUrl, "top")}
+                style={{ ...styles.btnSecondary, padding: "4px 12px", fontSize: "0.72rem" }}
+              >
+                {copied === "top" ? "✓" : "コピー"}
+              </button>
+            </div>
+          </div>
+
+          {/* Stats Grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 10 }}>
+            <div style={styles.statCard}>
+              <div style={styles.statLabel}>最新号</div>
+              <div style={styles.statValue}>{dashboard.latestDate || "未発行"}</div>
+            </div>
+            <div style={styles.statCard}>
+              <div style={styles.statLabel}>号数</div>
+              <div style={styles.statValue}>{dashboard.lastDelivery?.issueNumber || `No. ${String(dashboard.currentCounter).padStart(3, "0")}`}</div>
+            </div>
+            <div style={styles.statCard}>
+              <div style={styles.statLabel}>登録者数</div>
+              <div style={styles.statValue}>{dashboard.subscriberCount}人</div>
+            </div>
+            <div style={styles.statCard}>
+              <div style={styles.statLabel}>最終配信</div>
+              <div style={styles.statValue}>
+                {dashboard.lastDelivery
+                  ? `${dashboard.lastDelivery.success}通 成功`
+                  : "未配信"}
+              </div>
+              {dashboard.lastDelivery && dashboard.lastDelivery.failed > 0 && (
+                <div style={{ fontSize: "0.7rem", color: "#ff4444", marginTop: 2 }}>
+                  {dashboard.lastDelivery.failed}通 失敗
+                </div>
+              )}
+              {dashboard.lastDelivery && (
+                <div style={{ fontSize: "0.65rem", color: "#666", marginTop: 2 }}>
+                  {new Date(dashboard.lastDelivery.sentAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
       )}
 
       {/* Issue Counter */}
@@ -513,5 +610,26 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid #2a2a2a",
     borderRadius: 4,
     background: "#fff",
+  },
+  statCard: {
+    background: "#1a1a1a",
+    border: "1px solid #2a2a2a",
+    borderRadius: 6,
+    padding: "12px 14px",
+  },
+  statLabel: {
+    fontSize: "0.65rem",
+    fontWeight: 700,
+    color: "#666",
+    textTransform: "uppercase" as const,
+    letterSpacing: "0.08em",
+    fontFamily: "Montserrat, sans-serif",
+    marginBottom: 4,
+  },
+  statValue: {
+    fontSize: "0.95rem",
+    fontWeight: 900,
+    color: "#fff",
+    fontFamily: "monospace",
   },
 };
