@@ -25,6 +25,7 @@ export default function AdminPage() {
   const [testEmail, setTestEmail] = useState("");
   const [statusMsg, setStatusMsg] = useState("");
   const [issueCounter, setIssueCounter] = useState<number | null>(null);
+  const [previewPage, setPreviewPage] = useState<string>("latest");
 
   const authHeader = `Bearer ${password}`;
 
@@ -299,13 +300,46 @@ export default function AdminPage() {
         </div>
       </section>
 
-      {/* Preview iframe */}
+      {/* Reader-facing Pages Preview */}
       <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>最新号プレビュー</h2>
+        <h2 style={styles.sectionTitle}>読者向けページ プレビュー</h2>
+        <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap" as const }}>
+          {[
+            { key: "latest", label: "最新号" },
+            { key: "/", label: "トップ（購読登録）" },
+            { key: "/api/unsubscribe?email=test@example.com", label: "配信解除" },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setPreviewPage(tab.key)}
+              style={{
+                padding: "6px 14px",
+                background: previewPage === tab.key ? "#ff4200" : "transparent",
+                color: previewPage === tab.key ? "#fff" : "#999",
+                border: previewPage === tab.key ? "1px solid #ff4200" : "1px solid #333",
+                borderRadius: 4,
+                fontSize: "0.75rem",
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+          <a
+            href={previewPage === "latest" ? "/latest" : previewPage}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ ...styles.btnSecondary, padding: "6px 14px", fontSize: "0.75rem" }}
+          >
+            別タブで開く ↗
+          </a>
+        </div>
         <iframe
-          src="/latest"
+          key={previewPage}
+          src={previewPage === "latest" ? "/latest" : previewPage}
           style={styles.iframe}
-          title="最新号プレビュー"
+          title="読者向けページ プレビュー"
         />
       </section>
     </div>
